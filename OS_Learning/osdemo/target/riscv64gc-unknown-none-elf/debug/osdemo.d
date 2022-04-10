@@ -1,0 +1,1 @@
+/Users/huangpengxiang/Downloads/OS_competition/osdemo/target/riscv64gc-unknown-none-elf/debug/osdemo: /Users/huangpengxiang/Downloads/OS_competition/osdemo/src/lang_items.rs /Users/huangpengxiang/Downloads/OS_competition/osdemo/src/main.rs
