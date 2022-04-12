@@ -26,7 +26,7 @@ CFLAGS = -Wall -O2 -fno-omit-frame-pointer -ggdb -g -march=rv64imafdc
 CFLAGS += -MD
 CFLAGS += -mcmodel=medany
 CFLAGS += -ffreestanding -fno-common -nostdlib -mno-relax
-CFLAGS += -Iinclude/
+CFLAGS += -Ikernel/include/
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 
 ifeq ($(platform), qemu)
@@ -71,6 +71,8 @@ SRC	+= \
 	$K/src/main.c \
 	$K/src/console.c \
 	$K/src/printf.c \
+	$K/src/panic.c \
+	
 # $K/trap/fcntxt.S 
 
 
