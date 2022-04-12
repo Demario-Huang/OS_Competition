@@ -71,6 +71,8 @@ SRC	+= \
 	$K/src/main.c \
 	$K/src/console.c \
 	$K/src/printf.c \
+	$K/src/panic.c \
+	
 # $K/trap/fcntxt.S 
 
 
