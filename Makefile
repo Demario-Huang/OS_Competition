@@ -12,7 +12,7 @@ BUILD_DIR := build
 TOOLPREFIX 	:= riscv64-unknown-elf-
 # TOOLPREFIX	:= riscv64-linux-gnu-
 CC 		:= $(TOOLPREFIX)gcc
-AS		:= $(TOOLPREFIX)gas
+AS		:= $(TOOLPREFIX)as
 LD		:= $(TOOLPREFIX)ld
 # LD 		:= $(TOOLPREFIX)gcc
 OBJCOPY	:= $(TOOLPREFIX)objcopy
@@ -49,7 +49,7 @@ endif
 # QEMU 
 CPUS := 1
 
-QEMUOPTS = -machine virt -kernel $T/kernel -m 6M -nographic
+QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
