@@ -1,4 +1,5 @@
 #include "console.h"
+#include "printf.h"
 
 char c;
 void printf(char *fmt, ...){
