@@ -4,7 +4,7 @@ platform	:= qemu
 mode		:= release
 
 K := kernel
-U := xv6-user
+U := user
 T := target
 BUILD_DIR := build
 
@@ -72,6 +72,8 @@ SRC	+= \
 	$K/src/console.c \
 	$K/src/printf.c \
 	$K/src/panic.c \
+	$K/src/trap/trap_context.c \
+	$K/src/link_app.S \
 	
 # $K/trap/fcntxt.S 
 
@@ -157,36 +159,7 @@ $U/usys.o : $U/usys.pl
 .PRECIOUS: %.o
 
 UPROGS=\
-	$U/_init\
-	$U/_sh\
-	$U/_cat\
-	$U/_echo\
-	$U/_grep\
-	$U/_ls\
-	$U/_kill\
-	$U/_mkdir\
-	$U/_xargs\
-	$U/_sleep\
-	$U/_find\
-	$U/_rm\
-	$U/_rmdir\
-	$U/_wc\
-	$U/_info\
-	$U/_usertests\
-	$U/_strace\
-	$U/_mv\
-	$U/_test\
-	$U/_grind\
-	$U/_forktest\
-	$U/_stressfs\
-	$U/_cowtest\
-	$U/_lazytests\
-	$U/_mount\
-	$U/_umount\
-	$U/_dup3\
-	$U/_mmaptests\
-	$U/_sync\
-	$U/_signal_test
+	$U/hello_world.c \
 
 user: $(UPROGS)
 
