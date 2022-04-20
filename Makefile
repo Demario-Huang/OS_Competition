@@ -12,7 +12,7 @@ BUILD_DIR := build
 TOOLPREFIX 	:= riscv64-unknown-elf-
 # TOOLPREFIX	:= riscv64-linux-gnu-
 CC 		:= $(TOOLPREFIX)gcc
-AS		:= $(TOOLPREFIX)gas
+AS		:= $(TOOLPREFIX)as
 LD		:= $(TOOLPREFIX)ld
 # LD 		:= $(TOOLPREFIX)gcc
 OBJCOPY	:= $(TOOLPREFIX)objcopy
@@ -49,7 +49,8 @@ endif
 # QEMU 
 CPUS := 1
 
-QEMUOPTS = -machine virt -kernel $T/kernel -nographic
+
+QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
@@ -74,6 +75,8 @@ SRC	+= \
 	$K/src/panic.c \
 	$K/src/trap/trap_context.c \
 	$K/src/link_app.S \
+	$K/src/loader.c \
+	$K/src/string.c \
 	
 # $K/trap/fcntxt.S 
 
