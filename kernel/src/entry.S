@@ -1,6 +1,7 @@
 	.section .text.entry
 	.globl _entry
 _entry: 
+	addi a0, zero, 1
 	la sp, boot_stack_top
     call main
 
