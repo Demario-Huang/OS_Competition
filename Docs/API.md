@@ -1,5 +1,13 @@
 # API Design
 
+**Overview:** 
+
+初赛计划
+
+1. **First Stage:** Memory Management + Trap + part of syscalls （四月底）
+2. **Second Stage:** task schedule + part of syscalls（考试周之前）
+3. **Third Stage:** IO, File system + part of sys calls （期末考试后）
+
 #### MM
 
 address.h:
