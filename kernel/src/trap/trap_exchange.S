@@ -26,7 +26,7 @@ __alltraps:
     # we can use t0/t1/t2 freely, because they have been saved in TrapContext
     # csrr t0, sstatus
     csrr t1, sepc
-    addi t1, t1, 2   # 我自己加的，想让其指向下一条指令
+    addi t1, t1, 4   # 我自己加的，想让其指向下一条指令
     # sd t0, 32*8(sp)
     sd t1, 32*8(sp)
     # read user stack from sscratch and save it in TrapContext
