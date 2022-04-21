@@ -78,7 +78,10 @@ SRC	+= \
 	$K/src/link_app.S \
 	$K/src/loader.c \
 	$K/src/string.c \
+	$K/src/proc.c \
 	$K/src/syscall/syscall.c \
+	$K/src/trap/trap_exchange.S \
+	
 
 # $K/trap/fcntxt.S 
 

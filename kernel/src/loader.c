@@ -14,9 +14,6 @@ uint64 static app_entry = 0x80400000;
 
 void load(){
     uint64 size = (&app_0_end - &app_0_start)*8;    
-    printf("The address of app_0_start is %x \n", &app_0_start);
-    printf("The address of app_0_end is %x \n", &app_0_end);
-    printf("the size is %x\n", size);
-    memcpy(&app_entry, &app_0_start, size);
+    memcpy(app_entry, &app_0_start, size);
 }
 

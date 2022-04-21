@@ -7,8 +7,10 @@
 
 // struct trap_context trap_cx;
 
-void return_to_user(struct trap_context trap_cx);
+extern void __restore(uint64 a0, uint64 a1);
 
-void trap_handler(struct trap_context trap_cx);
+void return_to_user();
+
+void trap_handler();
 
 #endif
