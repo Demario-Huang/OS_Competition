@@ -40,9 +40,6 @@ void init_app(){
     // 第二步将trap上下文放在用户栈高位栈顶：
     uint64 user_high_sp = get_user_stack_high_top();
     *((struct trap_context *)user_high_sp) = app_trap_context;
-
-    printf("the address of trap_handler is %x\n", app_trap_context.trap_handler); 
-    printf("the address of printf is %x\n", printf);
     // 第三步，将stvec修改成__alltraps的位置
     w_stvec(__alltraps);
 }

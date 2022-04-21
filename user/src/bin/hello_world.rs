@@ -6,6 +6,7 @@ extern crate user_lib;
 
 #[no_mangle]
 fn main() -> i32 {
-    println!("Hello, world!");
+    println!("[user] Hello, world!");
+    println!("[user] trap tested well now!");
     0
 }
