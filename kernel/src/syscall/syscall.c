@@ -21,7 +21,7 @@ uint64 syscall(uint64 type, uint64 args[3]){
         sys_exit(args[0]);
     }
     else{
-        printf("Not supported system call!\n");
+        printf("Not supported system call: %d\n", type);
     }
     return 0;
 }
