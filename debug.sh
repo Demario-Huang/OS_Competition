@@ -1,0 +1,1 @@
+riscv64-unknown-elf-gdb -ex 'file ./kernel/target/kernel' -ex 'set arch riscv:rv64' -ex 'target remote localhost:1234' 

@@ -74,10 +74,15 @@ SRC	+= \
 	$K/src/printf.c \
 	$K/src/panic.c \
 	$K/src/trap/trap_context.c \
+	$K/src/trap/trap.c \
 	$K/src/link_app.S \
 	$K/src/loader.c \
 	$K/src/string.c \
+	$K/src/proc.c \
+	$K/src/syscall/syscall.c \
+	$K/src/trap/trap_exchange.S \
 	
+
 # $K/trap/fcntxt.S 
 
 
