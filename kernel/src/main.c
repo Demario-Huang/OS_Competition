@@ -5,7 +5,7 @@
 #include "printf.h"
 #include "panic.h"
 #include "types.h"
-#include "laoder.h"
+#include "loader.h"
 #include "proc.h"
 
 extern uint64 app_0_start;
