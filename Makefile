@@ -50,7 +50,7 @@ endif
 CPUS := 1
 
 
-QEMUOPTS = -machine virt -kernel $T/kernel  -nographic -s -S
+QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
@@ -79,6 +79,7 @@ SRC	+= \
 	$K/src/loader.c \
 	$K/src/string.c \
 	$K/src/proc.c \
+	$K/src/framealloc.c \
 	$K/src/syscall/syscall.c \
 	$K/src/trap/trap_exchange.S \
 	
