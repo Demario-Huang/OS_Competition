@@ -50,7 +50,7 @@ endif
 CPUS := 1
 
 
-QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
+QEMUOPTS = -machine virt -kernel $T/kernel  -nographic -s -S
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
