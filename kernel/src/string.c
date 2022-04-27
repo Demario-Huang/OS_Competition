@@ -12,8 +12,6 @@
 void memmove(uint64 dst, uint64 src, int size){
     int cpy_index = 0;
 
-    printf("the dst is %x\n", dst);
-    printf("the src is %x\n", src);
     while (cpy_index < size){
         *(char*)(dst + cpy_index) = *(char*)(src + cpy_index);    // 一个一个byte的复制过去
         cpy_index ++;

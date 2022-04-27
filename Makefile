@@ -50,7 +50,7 @@ endif
 CPUS := 1
 
 
-QEMUOPTS = -machine virt -kernel $T/kernel  -nographic -s -S
+QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
@@ -81,7 +81,11 @@ SRC	+= \
 	$K/src/proc.c \
 	$K/src/syscall/syscall.c \
 	$K/src/trap/trap_exchange.S \
-	
+	$K/src/task/task_context.c \
+	$K/src/task/task_control_block.c \
+	$K/src/task/pid_allocator.c \
+	$K/src/task/task_manager.c \
+	$K/src/mm/pagetable.c \
 
 # $K/trap/fcntxt.S 
 
