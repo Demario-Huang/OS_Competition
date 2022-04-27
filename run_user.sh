@@ -7,3 +7,4 @@ qemu-riscv64 ./target/riscv64gc-unknown-none-elf/release/hello_world
 qemu-riscv64 ./target/riscv64gc-unknown-none-elf/release/power
 qemu-riscv64 ./target/riscv64gc-unknown-none-elf/release/init_proc
 qemu-riscv64 ./target/riscv64gc-unknown-none-elf/release/bash
+
