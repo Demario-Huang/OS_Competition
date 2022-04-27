@@ -79,7 +79,7 @@ SRC	+= \
 	$K/src/loader.c \
 	$K/src/string.c \
 	$K/src/proc.c \
-	$K/src/framealloc.c \
+	$K/src/mm/framealloc.c \
 	$K/src/syscall/syscall.c \
 	$K/src/trap/trap_exchange.S \
 	$K/src/task/task_context.c \
