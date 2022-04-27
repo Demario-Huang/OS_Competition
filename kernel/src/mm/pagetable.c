@@ -4,11 +4,7 @@
 #include "panic.h"
 #include "types.h"
 #include "string.h"
-<<<<<<< HEAD
-#include "pagetable.h"
-=======
 #include "mm/pagetable.h"
->>>>>>> fcd8328ce79e4ad0f6f868be8502f290ca99895f
 #include "mm/framealloc.h"
 
 
