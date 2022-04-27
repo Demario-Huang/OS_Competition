@@ -6,7 +6,7 @@ _entry:
     call main
 
 	.section .bss.stack 
-	.align 12
+	.align 12 # why 12?
 	.globl boot_stack 
 boot_stack: 
 	.space 4096 * 4 * 2
