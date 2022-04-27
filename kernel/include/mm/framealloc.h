@@ -17,7 +17,7 @@ static uint8 Isinit = 0;
 static uint32 kernel_frame_end = 0;
 
 void initframe(); // init frame
-uint32 get_frame(); // return the first address of current free frame
+uint32 get_frame(); // return the first free frame number
 void free_frame(uint32 frame_number);
 
 #endif // FRAMEALLOC_H

@@ -5,11 +5,7 @@
 #include "types.h"
 #include "string.h"
 #include "pagetable.h"
-
-
-uint64 get_frame(){
-    return 0x700;
-}
+#include "mm/framealloc.h"
 
 
 // 从vpn中提取出二级PPN
