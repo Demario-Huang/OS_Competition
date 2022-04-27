@@ -12,12 +12,6 @@ struct PageTable{
     uint64 root_ppn;
 };
 
-<<<<<<< HEAD:kernel/include/pagetable.h
-// // 假设frame_allocator已经实现了的 -> 分配一个物理页号
-// uint64 get_frame();
-=======
->>>>>>> fcd8328ce79e4ad0f6f868be8502f290ca99895f:kernel/include/mm/pagetable.h
-
 // 从vpn中提取出二级PPN
 uint64 get_ppn_2(uint64 ppn);
 

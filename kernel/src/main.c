@@ -11,8 +11,6 @@
 #include "pid_allocator.h"
 #include "mm/pagetable.h"
 
->>>>>>> fcd8328ce79e4ad0f6f868be8502f290ca99895f
-
 extern uint64 app_0_start;
 extern uint64 app_0_end;
 
