@@ -2,6 +2,7 @@
 #define __PAGETABLE_H
 
 #include "types.h"
+#include "mm/framealloc.h"
 
 
 
@@ -11,8 +12,8 @@ struct PageTable{
     uint64 root_ppn;
 };
 
-// 假设frame_allocator已经实现了的 -> 分配一个物理页号
-uint64 get_frame();
+// // 假设frame_allocator已经实现了的 -> 分配一个物理页号
+// uint64 get_frame();
 
 // 从vpn中提取出二级PPN
 uint64 get_ppn_2(uint64 ppn);
