@@ -4,12 +4,8 @@
 #include "panic.h"
 #include "types.h"
 #include "string.h"
-#include "pagetable.h"
-
-
-uint64 get_frame(){
-    return 0x700;
-}
+#include "mm/pagetable.h"
+#include "mm/framealloc.h"
 
 
 // 从vpn中提取出二级PPN
@@ -61,6 +57,7 @@ void free_PTE(uint64 PTE_addr){
     *(uint64*)PTE_addr = 0;
 }
 
+
 uint64 get_PTE_ppn(uint64 PTE_addr){   // 从PTE中取出其指向的物理页号
     uint64 PTE = *(uint64*)PTE_addr;
     return (PTE >> 10) & ((1 << 44) - 1);
@@ -76,7 +73,6 @@ void map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags){
 
 
     uint64 PTE_addr = get_PTE(root_ppn, ppn_2);
-
 
     if (!check_PTE_valid(*(uint64*)PTE_addr)){    // 证明下面的两级页表还没有建好。开始建表
         set_permission(PTE_addr, 1); // 设置Valid bit
@@ -110,11 +106,12 @@ void map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags){
 void unmap(struct PageTable pg, uint64 vpn){
     uint64 root_ppn = pg.root_ppn;
 
-    uint64 ppn_2 = get_ppn_2;
-    uint64 ppn_1 = get_ppn_1;
-    uint64 ppn_0 = get_ppn_0;
+    uint64 ppn_2 = get_ppn_2(vpn);
+    uint64 ppn_1 = get_ppn_1(vpn);
+    uint64 ppn_0 = get_ppn_0(vpn);
 
     uint64 first_PTE_addr = get_PTE(root_ppn, ppn_2);
+
     if (check_PTE_valid(*(uint64*)first_PTE_addr)){    
      
         uint64 next_page_directory = get_PTE_ppn(first_PTE_addr);            
@@ -130,7 +127,7 @@ void unmap(struct PageTable pg, uint64 vpn){
             if (check_PTE_valid(*(uint64*)third_PTE_addr)){
                 uint64 corresponding_frame = get_PTE_ppn(third_PTE_addr);
                 free_PTE(third_PTE_addr); 
-                // 这里需要一个函数将物理地址转为物理页号，然后调用frame_allocator的free_frame()函数
+                free_frame(corresponding_frame);
             }else{
                 panic("Wrong in unmapping!\n");
             } 
@@ -147,5 +144,7 @@ void test_page_table(){
 
     uint64 root_ppn = test_page_table.root_ppn;
 
-    map(test_page_table, 1, 10, 0b1111);
+    map(test_page_table, 1, 11, 0b1111);
+
+    unmap(test_page_table, 1);
 }
