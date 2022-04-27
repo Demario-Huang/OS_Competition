@@ -5,6 +5,7 @@
 #include "panic.h"
 #include "types.h"
 #include "string.h"
+#include "console.h"
 
 
 

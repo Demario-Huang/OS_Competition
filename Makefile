@@ -82,7 +82,11 @@ SRC	+= \
 	$K/src/mm/framealloc.c \
 	$K/src/syscall/syscall.c \
 	$K/src/trap/trap_exchange.S \
-	
+	$K/src/task/task_context.c \
+	$K/src/task/task_control_block.c \
+	$K/src/task/pid_allocator.c \
+	$K/src/task/task_manager.c \
+	$K/src/mm/pagetable.c \
 
 # $K/trap/fcntxt.S 
 
