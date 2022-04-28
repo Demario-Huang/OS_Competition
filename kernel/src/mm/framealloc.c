@@ -47,7 +47,7 @@ uint32 get_frame(){
       uint32 byte_number = index / 8;
       uint32 bit_number = index % 8;
       bitmap[byte_number] |= (1 << bit_number);
-      return index;
+      return index + (0x80200000 / 4096);
     }
   }
 
@@ -55,6 +55,7 @@ uint32 get_frame(){
 }
 
 void free_frame(uint32 frame_number){
+  frame_number -= (0x80200000 / 4096);
   for (uint32 index = 0; index < PAGE_SIZE; index+=32) {
     uint32 * addr = (uint32*)(BASE_ADDRESS + frame_number * PAGE_SIZE + index);
     *addr = 0;
