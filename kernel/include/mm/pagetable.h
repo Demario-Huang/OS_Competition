@@ -5,8 +5,6 @@
 #include "mm/framealloc.h"
 
 
-
-
 // PageTable数据结构，储存根目录的物理页号
 struct PageTable{
     uint64 root_ppn;
