@@ -11,6 +11,9 @@
 #include "pid_allocator.h"
 #include "mm/pagetable.h"
 
+#include "mm/MapArea.h"
+#include "mm/MemorySet.h"
+
 extern uint64 app_0_start;
 extern uint64 app_0_end;
 
@@ -19,7 +22,14 @@ void main(int num_core) {
     test_alloc();
     load();    // 将应用程序load到主内存中
     init_app(); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
+
+    map_kernel();
+    printf("ready to activate mm!\n");
+    activate_mm();
+    printf("ok to activate mm!\n");
+
     test_page_table();
+
     run_app();
     panic("[kernel] If this is printed, sth must get wrong!\n");
     while (1) {}
