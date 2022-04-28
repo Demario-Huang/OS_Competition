@@ -87,6 +87,7 @@ SRC	+= \
 	$K/src/task/pid_allocator.c \
 	$K/src/task/task_manager.c \
 	$K/src/mm/pagetable.c \
+	$K/src/mm/kmalloc.c \
 
 # $K/trap/fcntxt.S 
 
