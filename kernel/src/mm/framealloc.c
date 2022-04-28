@@ -10,7 +10,7 @@ extern uint32 ekernel;
 
 
 void initframe(){
-  uint32 kernel_end = &ekernel;
+  uint32  kernel_end = &ekernel;
   printf("[kernel] end of ekernel is %x \n", kernel_end);
   uint32 kernel_frame = (kernel_end - BASE_ADDRESS)/PAGE_SIZE;
   uint32 remain =  (kernel_end - BASE_ADDRESS) % PAGE_SIZE;
@@ -55,11 +55,12 @@ uint32 get_frame(){
 }
 
 void free_frame(uint32 frame_number){
-  frame_number -= (0x80200000 / 4096);
+  frame_number = frame_number-0x80200000/4096;
   for (uint32 index = 0; index < PAGE_SIZE; index+=32) {
     uint32 * addr = (uint32*)(BASE_ADDRESS + frame_number * PAGE_SIZE + index);
     *addr = 0;
   }
+  // modify the bitmap
   uint32 byte_number = frame_number / 8;
   uint32 bit_number = frame_number % 8;
   bitmap[byte_number] &= ~(1 << bit_number);
