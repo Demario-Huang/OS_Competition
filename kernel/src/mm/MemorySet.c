@@ -24,7 +24,7 @@ extern uint32 ebss;
 
 void map_kernel(){
     printf("[Memory Set] kernel [%x] - [%x]\n", &skernel, &ekernel);
-    printf("[Memory Set] .text [%x] - [%x]\n", &stext, &etext-1);
+    printf("[Memory Set] .text [%x] - [%x]\n", &stext, &etext);
     printf("[Memory Set] .rodata [%x] - [%x]\n", &srodata, &erodata);
     printf("[Memory Set] .data [%x] - [%x]\n", &sdata, &edata);
     printf("[Memory Set] .bss [%x] - [%x]\n", &sbss_with_stack, &ebss);
