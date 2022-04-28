@@ -88,6 +88,8 @@ SRC	+= \
 	$K/src/task/task_manager.c \
 	$K/src/mm/pagetable.c \
 	$K/src/mm/kmalloc.c \
+	$K/src/mm/MapArea.c \
+	$K/src/mm/MemorySet.c \
 
 # $K/trap/fcntxt.S 
 
