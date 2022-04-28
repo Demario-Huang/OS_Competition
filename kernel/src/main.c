@@ -11,7 +11,7 @@
 #include "pid_allocator.h"
 #include "mm/pagetable.h"
 #include "mm/kmalloc.h"
-
+#include "riscv.h"
 #include "mm/MapArea.h"
 #include "mm/MemorySet.h"
 
@@ -29,6 +29,9 @@ void main(int num_core) {
     activate_mm();
     printf("ok to activate mm!\n");
     test_page_table();
+
+
+    printf("[kernel] hello man!\n");
     run_app();
     panic("[kernel] If this is printed, sth must get wrong!\n");
     while (1) {}

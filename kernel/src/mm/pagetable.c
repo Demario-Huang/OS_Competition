@@ -24,7 +24,7 @@ uint64 get_ppn_0(uint64 ppn){
 }
 
 uint64 to_physical_addr(uint64 ppn){
-    return (ppn << 12) + 0x80200000;
+    return (ppn << 12);
 }
 
 struct PageTable new_pagetable(){

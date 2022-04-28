@@ -10,10 +10,10 @@
 #include "console.h"
 
 struct Map_Area new_Map_Area(uint64 start_addr, uint64 end_addr, uint64 map_type, uint64 permissions){
-    uint64 start_vpn = (start_addr - 0x80200000) / PAGE_SIZE;
-    uint64 end_vpn = (end_addr - 0x80200000) / PAGE_SIZE;
+    uint64 start_vpn = (start_addr) / PAGE_SIZE;
+    uint64 end_vpn = (end_addr) / PAGE_SIZE;
 
-    if (((end_addr - 0x80200000) % PAGE_SIZE) > 0) end_vpn += 1;
+    if (((end_addr) % PAGE_SIZE) > 0) end_vpn += 1;
 
     struct Map_Area new_map_area;
     new_map_area.vpn_start = start_vpn;
