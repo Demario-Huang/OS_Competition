@@ -2,15 +2,13 @@
 #define __PAGETABLE_H
 
 #include "types.h"
-
-
+#include "mm/framealloc.h"
 
 
 // PageTable数据结构，储存根目录的物理页号
 struct PageTable{
     uint64 root_ppn;
 };
-
 
 // 从vpn中提取出二级PPN
 uint64 get_ppn_2(uint64 ppn);
