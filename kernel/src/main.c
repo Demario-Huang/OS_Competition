@@ -23,16 +23,22 @@ void main(int num_core) {
     initmalloc();
     test_alloc();
     load();    // 将应用程序load到主内存中
-    init_app(); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
+
     map_kernel();
-    printf("ready to activate mm!\n");
+    printf("[kernel] ready to activate mm!\n");
     activate_mm();
-    printf("ok to activate mm!\n");
+
+    printf("[kernel] ok to activate mm! Back to Kernel!\n");
+
     test_page_table();
 
 
+
     printf("[kernel] hello man!\n");
-    run_app();
+
+    init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
+    run_app(0);
+
     panic("[kernel] If this is printed, sth must get wrong!\n");
     while (1) {}
 }

@@ -48,7 +48,7 @@ void map_kernel(){
     push_Map_Area(kernel_memorySet.bss, kernel_memorySet.page_table, &sbss_with_stack, &ebss);
 
     // map Avaibable Frames
-    kernel_memorySet.Available_Frames = new_Map_Area(&ekernel, 0x80A00000-1, 0, 0b0011);
+    kernel_memorySet.Available_Frames = new_Map_Area(&ekernel, 0x80A00000-1, 0, 0b0111);
     push_Map_Area(kernel_memorySet.Available_Frames, kernel_memorySet.page_table, &ekernel, 0x80A00000);
 }
 
