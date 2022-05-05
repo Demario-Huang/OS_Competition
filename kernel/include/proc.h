@@ -35,6 +35,7 @@ static char UserStack_LOW_9[USER_STACK_SIZE];
 static char UserStack_HIGH_9[1024];
 
 static char KernelStack_0[1024];
+static char KernelStack_1[1024];
 static char KernelStack_2[1024];
 static char KernelStack_3[1024];
 static char KernelStack_4[1024];
@@ -44,15 +45,21 @@ static char KernelStack_7[1024];
 static char KernelStack_8[1024];
 static char KernelStack_9[1024];
 
+static uint64 KernelStack_List[10] = {KernelStack, KernelStack_1, KernelStack_2, KernelStack_3, KernelStack_4, KernelStack_5, KernelStack_6, KernelStack_7, KernelStack_8, KernelStack_9};
+static uint64 UserStack_Low_List[10] = {UserStack_LOW, UserStack_LOW_1, UserStack_LOW_2, UserStack_LOW_3, UserStack_LOW_4, UserStack_LOW_5, UserStack_LOW_6, UserStack_LOW_7, UserStack_LOW_8, UserStack_LOW_9};
+static uint64 UserStack_High_List[10] = {UserStack_HIGH, UserStack_HIGH_1, UserStack_HIGH_2, UserStack_HIGH_3, UserStack_HIGH_4, UserStack_HIGH_5, UserStack_HIGH_6, UserStack_HIGH_7, UserStack_HIGH_8, UserStack_HIGH_9};
 
-uint64 get_user_stack_low_top();
 
-uint64 get_user_stack_high_top();
 
-uint64 get_kernel_stack_top();
 
-void init_app();
+uint64 get_user_stack_low_top(uint64 num);
 
-void run_app();
+uint64 get_user_stack_high_top(uint64 num);
+
+uint64 get_kernel_stack_top(uint64 num);
+
+void init_app(uint64 num);
+
+void run_app(uint64 num);
 
 #endif
