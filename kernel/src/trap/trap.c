@@ -16,9 +16,12 @@
 
 extern void __restore(uint64 a0, uint64 a1);
 
+extern uint64 current_user_stack_high;
+extern current_app;
+
 void return_to_user(){
     uint64 a1 = 0;    // 用户satp，暂时先设置成0
-    uint64 a0 = get_user_stack_high_top();      // 用户栈顶
+    uint64 a0 = current_user_stack_high;      // 用户栈顶
     __restore(a0, a1);
 }
 
@@ -29,7 +32,7 @@ void trap_handler(){
     uint64 stval = r_stval();
     if (scause == EXCP_ENV_CALL){
             // 先找到trap上下文中用户程序传递过来的参数
-        uint64 user_high_sp = get_user_stack_high_top();
+        uint64 user_high_sp = current_user_stack_high;
         struct trap_context current_trap_cx = *((struct trap_context *)user_high_sp);
         uint64 x17 = current_trap_cx.general_register[17];
         uint64 x10 = current_trap_cx.general_register[10];
@@ -39,7 +42,13 @@ void trap_handler(){
         args[0] = x10;
         args[1] = x11;
         args[2] = x12;
-        syscall(x17, args);
+        uint64 return_value = syscall(x17, args);
+        if (return_value > 0){
+            current_trap_cx.general_register[10] = return_value;
+            *((struct trap_context *)user_high_sp) = current_trap_cx;
+        }
+    }else{
+        printf("[kernel] unrecognized scause!\n");
     }
-    return_to_user();
+    run_app(current_app);
 }
