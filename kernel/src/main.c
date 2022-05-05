@@ -21,16 +21,18 @@ void main(int num_core) {
     printf("[kernel] num of cores: %d \n", num_core);  // 通过寄存器entry.S中设置的寄存器a0来传这个num_core参数
     test_alloc();
     load();    // 将应用程序load到主内存中
-    init_app(); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
 
     map_kernel();
-    printf("ready to activate mm!\n");
+    printf("[kernel] ready to activate mm!\n");
     activate_mm();
-    printf("ok to activate mm!\n");
+    printf("[kernel] ok to activate mm! Back to Kernel!\n");
 
 
     printf("[kernel] hello man!\n");
-    run_app();
+
+    init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
+    run_app(0);
+
     panic("[kernel] If this is printed, sth must get wrong!\n");
     while (1) {}
 }

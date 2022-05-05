@@ -8,11 +8,12 @@
 #include "string.h"
 
 extern uint64 _num_app;
-
+int num_of_apps;
+uint64 current_app = 0;
 
 void load(){
 
-    int num_of_apps = *(uint64 *)(&_num_app);
+    num_of_apps = *(uint64 *)(&_num_app);
 
     uint64 entry = 0x80400000;
     for (int i = 1; i <= num_of_apps; i++){
