@@ -33,6 +33,6 @@ typedef struct elf64_hdr
     uint16 e_shstrndx;
 } Elf64_Ehdr;
 
-void load_elf(uint64 elf_source);  // elf_source is the address of the target elf file
+struct User_MemorySet load_elf(uint64 elf_source);  // elf_source is the address of the target elf file
 
 #endif

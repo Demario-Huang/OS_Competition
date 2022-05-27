@@ -6,6 +6,8 @@
 
 // 存储一个连续虚拟地址的段，并有访问的特权级区分
 struct Map_Area{
+    uint64 start_addr;
+    uint64 end_addr;
     uint64 vpn_start;
     uint64 vpn_end;
     uint64 map_type;     // 0: 直接映射。 1： Framed

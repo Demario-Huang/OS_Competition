@@ -47,7 +47,7 @@ __alltraps:
 __restore:
     # a0: 用户栈栈顶; a1: user space token
     # switch to user space
-    # csrw satp, a1       # 切换到应用程序的页表
+    csrw satp, a1       # 切换到应用程序的页表
     sfence.vma
     csrw sscratch, a0
     mv sp, a0

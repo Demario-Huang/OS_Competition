@@ -6,6 +6,8 @@
 #include "task_control_block.h"
 #include "pid_allocator.h"
 
+static struct task_control_block processing_tcb;
+
 // contains several one bitmap. 
 static struct task_control_block TASK_MANAGER_CONTAINER[MAX_NUM_OF_APPS];   // 与pid一一对应   MAX_NUM_OF_APPS 定义在pid_allocator.h中
 

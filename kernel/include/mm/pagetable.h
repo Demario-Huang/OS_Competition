@@ -41,6 +41,9 @@ void map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags);
 // 给定一个虚拟页号，释放其映射的物理页帧，并清空对应的PTE
 void unmap(struct PageTable pg, uint64 vpn);
 
+// 给定一个虚拟地址，手动查表，给出对应的物理地址
+uint64 translate(struct PageTable pg, uint64 vir_addr);
+
 // a test mapping vpn = 1 to ppn = 10
 void test_page_table();
 

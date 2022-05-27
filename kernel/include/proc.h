@@ -54,6 +54,9 @@ struct U_Stack{
     char High[1024];
 };
 
+struct K_Stack{
+    char stack[1024];
+};
 
 uint64 get_user_stack_low_top(uint64 num);
 
