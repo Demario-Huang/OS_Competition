@@ -9,17 +9,17 @@ void add_task_control_block(struct task_control_block TCB){   //Add one TCB to T
 
     int pid = TCB.pid;
     
-    if (check_valid(pid)){
-        panic("Cannot add TCB to TASK_MANAGER!");
+    if (!check_valid(pid)){
+        panic("Cannot add TCB to TASK_MANAGER!\n");
     }
 
     TASK_MANAGER_CONTAINER[pid] = TCB;
-
+    printf("[task manager] the pid is %d\n", pid);
 }
 void free_task_control_block(int pid){
 
     if (!check_valid(pid)){
-        panic("Some thing wrong when free the tcb from TASK_MANAGER!");
+        panic("Some thing wrong when free the tcb from TASK_MANAGER!\n");
     }
 
     TASK_MANAGER_CONTAINER[pid] = empty_tcb();

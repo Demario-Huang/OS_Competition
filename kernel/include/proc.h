@@ -49,8 +49,14 @@ static uint64 KernelStack_List[10] = {KernelStack, KernelStack_1, KernelStack_2,
 static uint64 UserStack_Low_List[10] = {UserStack_LOW, UserStack_LOW_1, UserStack_LOW_2, UserStack_LOW_3, UserStack_LOW_4, UserStack_LOW_5, UserStack_LOW_6, UserStack_LOW_7, UserStack_LOW_8, UserStack_LOW_9};
 static uint64 UserStack_High_List[10] = {UserStack_HIGH, UserStack_HIGH_1, UserStack_HIGH_2, UserStack_HIGH_3, UserStack_HIGH_4, UserStack_HIGH_5, UserStack_HIGH_6, UserStack_HIGH_7, UserStack_HIGH_8, UserStack_HIGH_9};
 
+struct U_Stack{
+    char Low[USER_STACK_SIZE];
+    char High[1024];
+};
 
-
+struct K_Stack{
+    char stack[1024];
+};
 
 uint64 get_user_stack_low_top(uint64 num);
 

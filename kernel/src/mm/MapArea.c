@@ -16,6 +16,8 @@ struct Map_Area new_Map_Area(uint64 start_addr, uint64 end_addr, uint64 map_type
     if (((end_addr) % PAGE_SIZE) > 0) end_vpn += 1;
 
     struct Map_Area new_map_area;
+    new_map_area.start_addr = start_addr;
+    new_map_area.end_addr = end_addr;
     new_map_area.vpn_start = start_vpn;
     new_map_area.vpn_end = end_vpn;
     new_map_area.map_type = map_type;
@@ -53,9 +55,11 @@ void push_Map_Area(struct Map_Area map_area, struct PageTable pg, uint64 copy_st
             map(pg, vpn, target_ppn, permission);
             copy_start += PAGE_SIZE;
         }
-        uint64 target_ppn = get_frame();
-        copy_to_frame(target_ppn, copy_start, copy_end);
-        map(pg, vpn_end, target_ppn, permission);
+        if (copy_end > copy_start){
+            uint64 target_ppn = get_frame();
+            copy_to_frame(target_ppn, copy_start, copy_end);
+            map(pg, vpn_end, target_ppn, permission);
+        }
     }else{
         panic("Wrong in pushing MapArea!");
     }

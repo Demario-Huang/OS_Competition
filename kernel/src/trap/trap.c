@@ -10,6 +10,12 @@
 #include "riscv.h"
 #include "syscall.h"
 #include "proc.h"
+#include "mm/pagetable.h"
+#include "mm/framealloc.h"
+#include "mm/MapArea.h"
+#include "mm/MemorySet.h"
+#include "mm/kmalloc.h"
+#include "task_manager.h"
 
 
 #define EXCP_ENV_CALL     0x8
@@ -17,11 +23,14 @@
 extern void __restore(uint64 a0, uint64 a1);
 
 extern uint64 current_user_stack_high;
+extern uint64 current_user_satp;
 extern current_app;
 
 void return_to_user(){
-    uint64 a1 = 0;    // 用户satp，暂时先设置成0
+    
+    uint64 a1 = current_user_satp;    // 用户satp，暂时先设置成0
     uint64 a0 = current_user_stack_high;      // 用户栈顶
+
     __restore(a0, a1);
 }
 

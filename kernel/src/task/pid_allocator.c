@@ -19,7 +19,7 @@ int alloct_pid(){   // find a valid pid, then return it.
             return i;
         }
     }
-    panic("All the pids have been used!!");
+    panic("[kernel] All the pids have been used!!");
     return -100;
 }
 
@@ -28,7 +28,7 @@ void free_pid(int pid){
         PID_BITMAP[pid] = 0;
     }
     else {
-        panic("PID has already been free?");
+        panic("[kernel] PID has already been free?");
     }
 }
 
