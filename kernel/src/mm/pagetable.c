@@ -138,6 +138,44 @@ void unmap(struct PageTable pg, uint64 vpn){
     }
 }
 
+uint64 translate(struct PageTable pg, uint64 vir_addr){
+    printf("the vir_addr is %x\n", vir_addr);
+    uint64 vpn = vir_addr >> 12;
+    uint64 offset = vir_addr & 0b111111111111;
+
+    uint64 root_ppn = pg.root_ppn;
+
+    uint64 ppn_2 = get_ppn_2(vpn);
+    uint64 ppn_1 = get_ppn_1(vpn);
+    uint64 ppn_0 = get_ppn_0(vpn);
+
+    uint64 first_PTE_addr = get_PTE(root_ppn, ppn_2);
+    uint64 corresponding_frame;
+
+    if (check_PTE_valid(*(uint64*)first_PTE_addr)){    
+     
+        uint64 next_page_directory = get_PTE_ppn(first_PTE_addr);            
+        uint64 second_PTE_addr = get_PTE(next_page_directory, ppn_1);
+
+        if (check_PTE_valid(*(uint64*)second_PTE_addr)){
+            
+            next_page_directory = get_PTE_ppn(second_PTE_addr);            
+            uint64 third_PTE_addr = get_PTE(next_page_directory, ppn_0);
+
+            if (check_PTE_valid(*(uint64*)third_PTE_addr)){
+                corresponding_frame = get_PTE_ppn(third_PTE_addr);
+            }else{
+                panic("Wrong in translate!\n");
+            } 
+        }else{
+            panic("Wrong in translate!\n");
+        }  
+    }else{
+        panic("Wrong in translate!\n");
+    }
+    return corresponding_frame << 12 + offset;
+}
+
 void test_page_table(){
     struct PageTable test_page_table = new_pagetable();
 
