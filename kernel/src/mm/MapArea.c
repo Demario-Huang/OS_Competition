@@ -53,9 +53,11 @@ void push_Map_Area(struct Map_Area map_area, struct PageTable pg, uint64 copy_st
             map(pg, vpn, target_ppn, permission);
             copy_start += PAGE_SIZE;
         }
-        uint64 target_ppn = get_frame();
-        copy_to_frame(target_ppn, copy_start, copy_end);
-        map(pg, vpn_end, target_ppn, permission);
+        if (copy_end > copy_start){
+            uint64 target_ppn = get_frame();
+            copy_to_frame(target_ppn, copy_start, copy_end);
+            map(pg, vpn_end, target_ppn, permission);
+        }
     }else{
         panic("Wrong in pushing MapArea!");
     }

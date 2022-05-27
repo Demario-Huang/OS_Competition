@@ -143,7 +143,9 @@ void test_page_table(){
 
     uint64 root_ppn = test_page_table.root_ppn;
 
-    map(test_page_table, 1, 11, 0b1111);
+    uint64 test_frame = get_frame();
 
-    unmap(test_page_table, 1);
+    map(test_page_table, 1, test_frame, 0b1111);   // map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags)
+
+    unmap(test_page_table, 1);    // unmap(struct PageTable pg, uint64 vpn)
 }
