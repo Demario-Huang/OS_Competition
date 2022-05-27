@@ -11,7 +11,6 @@ extern uint32 ekernel;
 
 void initframe(){
   uint32  kernel_end = &ekernel;
-  printf("[kernel] end of ekernel is %x \n", kernel_end);
   uint32 kernel_frame = (kernel_end - BASE_ADDRESS)/PAGE_SIZE;
   uint32 remain =  (kernel_end - BASE_ADDRESS) % PAGE_SIZE;
   if (remain > 0) kernel_frame++;

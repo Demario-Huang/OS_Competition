@@ -26,11 +26,9 @@ uint64 syscall(uint64 type, uint64 args[3]){
         sys_exit(args[0]);
     }
     else if (type == SYSCALL_YIELD){
-        // TODO
         panic("[kernel] We haven't implement yield system call, so you can't sleep! Keep working!\n");
     }
     else if (type == SYSCALL_GET_TIME){
-        // TODO
         return r_time();
     }
     else{
@@ -49,8 +47,6 @@ void sys_exit(uint64 exit_code){
     }else{
         panic("finish running all the apps!\n");
     }
-
-    printf("[kernel] init again!\n");
 }
 
 uint64 sys_write(uint64 fd, char* buf, uint64 length) {

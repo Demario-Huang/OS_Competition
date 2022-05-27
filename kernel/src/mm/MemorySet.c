@@ -23,14 +23,9 @@ extern uint32 sbss_with_stack;
 extern uint32 ebss;
 
 void map_kernel(){
-    printf("the addrs of the static structure is %x\n",&kernel_memorySet);
-    printf("[Memory Set] kernel [%x] - [%x]\n", &skernel, &ekernel);
-    printf("[Memory Set] .text [%x] - [%x]\n", &stext, &etext);
-    printf("[Memory Set] .rodata [%x] - [%x]\n", &srodata, &erodata);
-    printf("[Memory Set] .data [%x] - [%x]\n", &sdata, &edata);
-    printf("[Memory Set] .bss [%x] - [%x]\n", &sbss_with_stack, &ebss);
 
     kernel_memorySet.page_table = new_pagetable();
+
     // map .text
     kernel_memorySet.text = new_Map_Area(&stext, &etext, 0, 0b0101);
     push_Map_Area(kernel_memorySet.text, kernel_memorySet.page_table, &stext, &etext);
@@ -58,7 +53,6 @@ uint64 root_ppn_to_token(uint64 root_ppn){
 }
 
 void activate_mm(){
-    printf("the root pnn is %d\n", kernel_memorySet.page_table.root_ppn);
     uint64 kernel_token = root_ppn_to_token(kernel_memorySet.page_table.root_ppn);
     w_satp(kernel_token);
     sfence_vma();

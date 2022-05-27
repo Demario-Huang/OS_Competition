@@ -5,5 +5,6 @@
 #include "types.h"
 
 #define USER_STACK_SIZE 4096
+#define USER_STACK_SIZE_FRAME 4
 
 #endif

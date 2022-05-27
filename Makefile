@@ -49,8 +49,8 @@ endif
 # QEMU 
 CPUS := 1
 
-
 QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
+# QEMUOPTS = -machine virt -kernel $T/kernel  -nographic -s -S
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
@@ -90,6 +90,8 @@ SRC	+= \
 	$K/src/mm/kmalloc.c \
 	$K/src/mm/MapArea.c \
 	$K/src/mm/MemorySet.c \
+	$K/src/load_elf.c \
+	
 
 # $K/trap/fcntxt.S 
 
