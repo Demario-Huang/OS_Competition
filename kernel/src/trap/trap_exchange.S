@@ -45,9 +45,9 @@ __alltraps:
     jr t1
 
 __restore:
-    # a0: *TrapContext in user space(Constant); a1: user space token
+    # a0: 用户栈栈顶; a1: user space token
     # switch to user space
-    # csrw satp, a1       # 因为还没有开启分页，暂时还没有这个功能
+    # csrw satp, a1       # 切换到应用程序的页表
     sfence.vma
     csrw sscratch, a0
     mv sp, a0

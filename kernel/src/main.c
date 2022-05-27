@@ -25,16 +25,10 @@ void main(int num_core) {
     load();    // 将应用程序load到主内存中
 
     map_kernel();
-    printf("[kernel] ready to activate mm!\n");
     activate_mm();
-
     printf("[kernel] ok to activate mm! Back to Kernel!\n");
 
     test_page_table();
-
-
-
-    printf("[kernel] hello man!\n");
 
     init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
     run_app(0);
@@ -43,13 +37,12 @@ void main(int num_core) {
     while (1) {}
 }
 
+
 void test_alloc(){
-  uint32 frame1 = get_frame();
-  uint32 frame2 = get_frame();
-  uint32 frame3 = get_frame();
-  printf("[kernel] frame1, frame2, frame3 is %d %d %d\n", frame1, frame2, frame3);
-  free_frame(frame1);
-  free_frame(frame2);
-  uint32 frame4 = get_frame();
-  printf("[kernel] frame4 is %d\n", frame4);
+    uint32 frame1 = get_frame();
+    uint32 frame2 = get_frame();
+    uint32 frame3 = get_frame();
+    free_frame(frame1);
+    free_frame(frame2);
+    uint32 frame4 = get_frame();
 }

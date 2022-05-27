@@ -10,6 +10,7 @@
 #include "riscv.h"
 #include "syscall.h"
 #include "proc.h"
+#include "mm/MemorySet.h"
 
 
 #define EXCP_ENV_CALL     0x8
@@ -20,7 +21,7 @@ extern uint64 current_user_stack_high;
 extern current_app;
 
 void return_to_user(){
-    uint64 a1 = 0;    // 用户satp，暂时先设置成0
+    uint64 a1 = kernel_memorySet.page_table.root_ppn;    // 用户satp，暂时先设置成0
     uint64 a0 = current_user_stack_high;      // 用户栈顶
     __restore(a0, a1);
 }
