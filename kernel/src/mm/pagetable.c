@@ -138,12 +138,9 @@ void unmap(struct PageTable pg, uint64 vpn){
     }
 }
 
-uint64 translate(struct PageTable pg, uint64 vir_addr){
-    printf("the vir_addr is %x\n", vir_addr);
+uint64 translate(uint64 root_ppn, uint64 vir_addr){
     uint64 vpn = vir_addr >> 12;
     uint64 offset = vir_addr & 0b111111111111;
-
-    uint64 root_ppn = pg.root_ppn;
 
     uint64 ppn_2 = get_ppn_2(vpn);
     uint64 ppn_1 = get_ppn_1(vpn);
@@ -173,7 +170,7 @@ uint64 translate(struct PageTable pg, uint64 vir_addr){
     }else{
         panic("Wrong in translate!\n");
     }
-    return corresponding_frame << 12 + offset;
+    return corresponding_frame << 12 | offset;
 }
 
 void test_page_table(){

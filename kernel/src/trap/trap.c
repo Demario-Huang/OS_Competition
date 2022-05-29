@@ -30,7 +30,6 @@ void return_to_user(){
     
     uint64 a1 = current_user_satp;    // 用户satp，暂时先设置成0
     uint64 a0 = current_user_stack_high;      // 用户栈顶
-
     __restore(a0, a1);
 }
 
@@ -39,6 +38,9 @@ void return_to_user(){
 void trap_handler(){
     uint64 scause = r_scause();   // 获取中断的原因
     uint64 stval = r_stval();
+    if (scause != 8){
+        printf("the scause now is %d\n", scause);
+    }
     if (scause == EXCP_ENV_CALL){
             // 先找到trap上下文中用户程序传递过来的参数
         uint64 user_high_sp = current_user_stack_high;
@@ -54,6 +56,7 @@ void trap_handler(){
         uint64 return_value = syscall(x17, args);
         if (return_value > 0){
             current_trap_cx.general_register[10] = return_value;
+            printf("the current return value is %x\n", return_value);
             *((struct trap_context *)user_high_sp) = current_trap_cx;
         }
     }else{
