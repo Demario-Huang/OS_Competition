@@ -15,6 +15,11 @@
 #include "proc.h"
 #include "config.h"
 
+
+extern void __alltraps();
+extern void __restore(uint64 a0, uint64 a1);
+
+
 struct User_MemorySet load_elf(uint64 elf_source){
     struct User_MemorySet user_memory_set;
 
@@ -62,7 +67,7 @@ struct User_MemorySet load_elf(uint64 elf_source){
 
             uint64 flags = phdr.p_flags;
 
-            uint64 permission = 0x1000 | flags;   
+            uint64 permission = 0b1000 | flags;   
 
             uint64 copy_start = phdr.p_offset + elf_source;
             uint64 copy_end = copy_start + phdr.p_filesz;
@@ -85,19 +90,27 @@ struct User_MemorySet load_elf(uint64 elf_source){
     // Then, map user stack low and user stack high(trap context)
     // low
     // struct U_Stack new_user_stack;
-    uint64 start_va = kmalloc(USER_STACK_SIZE);
+    
+    // uint64 start_va = kmalloc(USER_STACK_SIZE);
+    uint64 start_va = UserStack_LOW_0;
     uint64 end_va = start_va + USER_STACK_SIZE;
 
-    printf("the start_va of stack is %x\n", start_va);
-    user_memory_set.UserStackLow = new_Map_Area(start_va, end_va, 1, 0x1111);
+    user_memory_set.UserStackLow = new_Map_Area(start_va, end_va, 0, 0b1011);
     push_Map_Area(user_memory_set.UserStackLow, user_memory_set.page_table, start_va, end_va);
     
     // High
     start_va = kmalloc(1024);
     end_va = start_va + 1024;
 
-    user_memory_set.UserStackHigh = new_Map_Area(start_va, end_va, 1, 0x1111);
+
+    user_memory_set.UserStackHigh = new_Map_Area(start_va, end_va, 0, 0b0011);
     push_Map_Area(user_memory_set.UserStackHigh, user_memory_set.page_table, start_va, end_va);
+
+    start_va = __restore;
+    end_va = start_va + 1024;
+    printf("[load elf] the address of trap handler is %x\n", start_va);
+    user_memory_set.Trampline = new_Map_Area(start_va, end_va, 0, 0b0101);
+    push_Map_Area(user_memory_set.Trampline, user_memory_set.page_table, start_va, end_va);
 
     return user_memory_set;
 }

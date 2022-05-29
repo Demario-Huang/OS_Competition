@@ -60,7 +60,7 @@ void init_app(uint64 num){
     // 第三步：初始化TCB
     struct task_control_block app_tcb = new_task_control_block(app_task_context,  kernel_stack_top);
     app_tcb.memoryset = current_mem_set;
-    app_tcb.user_token = 60 | current_mem_set.page_table.root_ppn;
+    app_tcb.user_token = root_ppn_to_token(current_mem_set.page_table.root_ppn);
 
     // 第四步：将初始化好的TCB放入task manager中
     add_task_control_block(app_tcb);
@@ -72,19 +72,21 @@ void init_app(uint64 num){
     uint64 kernel_satp = r_satp();   
     uint64 app_trap_handler = trap_handler;
 
-    current_user_stack_high = current_mem_set.UserStackHigh.end_addr;
-    current_user_satp = current_mem_set.page_table.root_ppn;
+    current_user_stack_high = current_mem_set.UserStackHigh.start_addr;
+    current_user_satp = app_tcb.user_token;
 
     struct trap_context app_trap_context = new_trap_cx(app_entry, kernel_satp, app_trap_handler, user_low_sp, kernel_stack_top);
 
 
     // 第二步: 将trap上下文放在用户栈高位栈顶：
-    uint64 user_high_sp = current_mem_set.UserStackHigh.end_addr;
+    uint64 user_high_sp = current_mem_set.UserStackHigh.start_addr;
     *((struct trap_context *)user_high_sp) = app_trap_context;
 
-    
+
+
     // 第三步: 将stvec修改成__alltraps的位置
     w_stvec(__alltraps);
+
     
 }
 
