@@ -24,6 +24,7 @@ struct User_MemorySet{
     struct Map_Area GuardPage;   //4k, 不允许读写
     struct Map_Area UserStackLow; // 4k
     struct Map_Area UserStackHigh; // Trampoline(4k) + TrapContext(4k)
+    struct Map_Area Trampline;
 };
 
 void map_kernel();    // 将整个kernel建立联系

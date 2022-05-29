@@ -8,7 +8,7 @@ const LEN: usize = 100;
 
 #[no_mangle]
 fn main() -> i32 {
-    println!("this is power 7777!");
+    println!("[user] this is power 7777!");
     let p = 7u64;
     let m = 998244353u64;
     let iter: usize = 160000;
@@ -20,10 +20,10 @@ fn main() -> i32 {
         s[next] = s[cur] * p % m;
         cur = next;
         if i % 10000 == 0 {
-            println!("power_7 [{}/{}]", i, iter);
+            println!("[user] power_7 [{}/{}]", i, iter);
         }
     }
-    println!("{}^{} = {}(MOD {})", p, iter, s[cur], m);
-    println!("Test power_7 OK!");
+    println!("[user] {}^{} = {}(MOD {})", p, iter, s[cur], m);
+    println!("[user] Test power_7 OK!");
     0
 }

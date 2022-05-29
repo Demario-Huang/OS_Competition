@@ -4,6 +4,11 @@
 #include "console.h"
 #include "proc.h"
 #include "riscv.h"
+#include "mm/pagetable.h"
+#include "mm/framealloc.h"
+#include "mm/MapArea.h"
+#include "mm/MemorySet.h"
+#include "mm/kmalloc.h"
 
 #define SYSCALL_READ 63
 #define SYSCALL_WRITE 64
@@ -17,9 +22,11 @@
 
 extern uint64 num_of_apps;
 extern uint64 current_app;
+extern uint64 current_user_satp;
 
 uint64 syscall(uint64 type, uint64 args[3]){
     if (type == SYSCALL_WRITE){
+        args[1] = translate(current_user_satp, args[1]);
         sys_write(args[0], args[1], args[2]);
     }
     else if (type == SYSCALL_EXIT){
@@ -29,10 +36,10 @@ uint64 syscall(uint64 type, uint64 args[3]){
         panic("[kernel] We haven't implement yield system call, so you can't sleep! Keep working!\n");
     }
     else if (type == SYSCALL_GET_TIME){
-        return r_time();
+        return r_time() / 1000000;
     }
     else{
-        printf("Not supported system call: %d\n", type);
+        printf("[kernel] Not supported system call: %d\n", type);
     }
     return 0;
 }
