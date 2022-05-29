@@ -54,6 +54,7 @@ uint64 root_ppn_to_token(uint64 root_ppn){
 
 void activate_mm(){
     uint64 kernel_token = root_ppn_to_token(kernel_memorySet.page_table.root_ppn);
+    printf("the kernel token is %x\n", kernel_token);
     w_satp(kernel_token);
     sfence_vma();
 }
