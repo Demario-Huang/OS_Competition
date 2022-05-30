@@ -33,7 +33,9 @@ uint64 syscall(uint64 type, uint64 args[3]){
         sys_exit(args[0]);
     }
     else if (type == SYSCALL_YIELD){
-        panic("[kernel] We haven't implement yield system call, so you can't sleep! Keep working!\n");
+
+        sys_yield();
+
     }
     else if (type == SYSCALL_GET_TIME){
         return r_time() / 10000000;
@@ -46,15 +48,16 @@ uint64 syscall(uint64 type, uint64 args[3]){
 
 void sys_exit(uint64 exit_code){
     printf("[kernel] The application end with exit code: %d\n", exit_code);
-
-    // then, switch to another app. 
+ 
     if (TASK_MANAGER.processing_tcb.pid + 1 < 4){
 
         init_app(TASK_MANAGER.processing_tcb.pid + 1);
+        run_next_app(TASK_MANAGER.processing_tcb.pid + 1);
 
     }else{
         panic("finish running all the apps!\n");
     }
+
 }
 
 uint64 sys_write(uint64 fd, char* buf, uint64 length) {
@@ -66,3 +69,8 @@ uint64 sys_write(uint64 fd, char* buf, uint64 length) {
     return length;
 }
 
+void sys_yield(){
+
+    run_next_app(TASK_MANAGER.processing_tcb.pid);
+
+}

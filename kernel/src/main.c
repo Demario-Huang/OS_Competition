@@ -31,7 +31,7 @@ void main(int num_core) {
 
     TASK_MANAGER.number_of_apps = 0; 
     init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
-    run_app(0);
+    run_next_app(0);
 
     panic("[kernel] If this is printed, sth must get wrong!\n");
 }
