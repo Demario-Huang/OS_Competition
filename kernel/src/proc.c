@@ -22,6 +22,7 @@
 
 extern void __alltraps();
 extern struct task_manager TASK_MANAGER;
+extern uint64 _num_app;
 
 
 void init_app(uint64 pid){
@@ -62,16 +63,45 @@ void init_app(uint64 pid){
     // 第三步: 将stvec修改成__alltraps的位置
     w_stvec(__alltraps);    
 
-
-    // TASK_MANAGER.processing_tcb = app_tcb;
 }
 
-void run_next_app(uint64 pid){
+uint64 scheduler(){
 
-    TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[pid];
-    if (pid == 0){
-        return_to_user();
+    // 先采用FIFO的schedule策略
+
+    uint64 current_pid = TASK_MANAGER.processing_tcb.pid;
+
+    uint64 next_pid = (current_pid + 1) % MAX_NUM_OF_APPS;
+
+    while(!check_valid(next_pid)){
+        next_pid = (next_pid + 1) % MAX_NUM_OF_APPS;
     }
+
+    return next_pid;
+
+}
+
+
+void init_all_apps(){
+    
+    uint64 num_of_apps = *(uint64 *)(&_num_app);
+
+    for (int i = 0; i < num_of_apps; i++){
+        init_app(i);
+    }
+    
+}
+
+void run_next_app(int init){
+
+    if (init == 1){
+        TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[0];
+        return_to_user();
+        return 0;
+    }
+
+    uint64 pid = scheduler();
+    TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[pid];
 
 }
 
