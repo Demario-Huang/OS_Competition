@@ -22,11 +22,11 @@
 
 extern uint64 num_of_apps;
 extern uint64 current_app;
-extern uint64 current_user_satp;
+extern struct User_MemorySet current_mem_set;
 
 uint64 syscall(uint64 type, uint64 args[3]){
     if (type == SYSCALL_WRITE){
-        args[1] = translate(current_user_satp, args[1]);
+        args[1] = translate(root_ppn_to_token(current_mem_set.page_table.root_ppn), args[1]);
         sys_write(args[0], args[1], args[2]);
     }
     else if (type == SYSCALL_EXIT){
@@ -36,7 +36,7 @@ uint64 syscall(uint64 type, uint64 args[3]){
         panic("[kernel] We haven't implement yield system call, so you can't sleep! Keep working!\n");
     }
     else if (type == SYSCALL_GET_TIME){
-        return r_time() / 1000000;
+        return r_time() / 10000000;
     }
     else{
         printf("[kernel] Not supported system call: %d\n", type);

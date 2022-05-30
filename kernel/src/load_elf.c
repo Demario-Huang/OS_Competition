@@ -87,23 +87,21 @@ struct User_MemorySet load_elf(uint64 elf_source){
         }
         ptr_ph_table += ehdr.e_phentsize;
     }
+
     // Then, map user stack low and user stack high(trap context)
     // low
-    // struct U_Stack new_user_stack;
-    
-    // uint64 start_va = kmalloc(USER_STACK_SIZE);
     uint64 start_va = UserStack_LOW_0;
     uint64 end_va = start_va + USER_STACK_SIZE;
 
-    user_memory_set.UserStackLow = new_Map_Area(start_va, end_va, 0, 0b1011);
+    user_memory_set.UserStackLow = new_Map_Area(start_va, end_va, 1, 0b1011);
     push_Map_Area(user_memory_set.UserStackLow, user_memory_set.page_table, start_va, end_va);
     
     // High
-    start_va = kmalloc(1024);
+    start_va = UserStack_HIGH_0;
     end_va = start_va + 1024;
 
 
-    user_memory_set.UserStackHigh = new_Map_Area(start_va, end_va, 0, 0b0011);
+    user_memory_set.UserStackHigh = new_Map_Area(start_va, end_va, 1, 0b0011);
     push_Map_Area(user_memory_set.UserStackHigh, user_memory_set.page_table, start_va, end_va);
 
     start_va = __restore;

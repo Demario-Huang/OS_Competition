@@ -22,14 +22,13 @@
 
 extern void __restore(uint64 a0, uint64 a1);
 
-extern uint64 current_user_stack_high;
-extern uint64 current_user_satp;
 extern current_app;
+extern struct User_MemorySet current_mem_set;
 
 void return_to_user(){
     
-    uint64 a1 = current_user_satp;    // 用户satp，暂时先设置成0
-    uint64 a0 = current_user_stack_high;      // 用户栈顶
+    uint64 a1 = root_ppn_to_token(current_mem_set.page_table.root_ppn);    // 用户satp
+    uint64 a0 = current_mem_set.UserStackHigh.start_addr;      // 用户栈顶
     __restore(a0, a1);
 }
 
@@ -43,8 +42,11 @@ void trap_handler(){
     }
     if (scause == EXCP_ENV_CALL){
             // 先找到trap上下文中用户程序传递过来的参数
-        uint64 user_high_sp = current_user_stack_high;
-        struct trap_context current_trap_cx = *((struct trap_context *)user_high_sp);
+        uint64 user_high_sp = current_mem_set.UserStackHigh.start_addr;
+        
+        uint64 phy_user_high_sp = translate(current_mem_set.page_table.root_ppn, user_high_sp);
+
+        struct trap_context current_trap_cx = *((struct trap_context *)phy_user_high_sp);
         uint64 x17 = current_trap_cx.general_register[17];
         uint64 x10 = current_trap_cx.general_register[10];
         uint64 x11 = current_trap_cx.general_register[11];
@@ -56,7 +58,6 @@ void trap_handler(){
         uint64 return_value = syscall(x17, args);
         if (return_value > 0){
             current_trap_cx.general_register[10] = return_value;
-            printf("the current return value is %x\n", return_value);
             *((struct trap_context *)user_high_sp) = current_trap_cx;
         }
     }else{
