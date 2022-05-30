@@ -10,7 +10,7 @@ struct task_control_block {
     struct User_MemorySet memoryset;
     struct task_context task_context;
     char* Kernel_stack;
-    int pid;
+    uint64 pid;
 };
 
 struct task_control_block new_task_control_block(struct task_context task_cx, char* Kernel_stack);
