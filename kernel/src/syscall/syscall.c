@@ -51,8 +51,9 @@ void sys_exit(uint64 exit_code){
  
     if (TASK_MANAGER.processing_tcb.pid + 1 < 4){
 
-        init_app(TASK_MANAGER.processing_tcb.pid + 1);
-        run_next_app(TASK_MANAGER.processing_tcb.pid + 1);
+        free_task_control_block(TASK_MANAGER.processing_tcb.pid);
+        // init_app(TASK_MANAGER.processing_tcb.pid + 1);
+        run_next_app(0);
 
     }else{
         panic("finish running all the apps!\n");
@@ -71,6 +72,7 @@ uint64 sys_write(uint64 fd, char* buf, uint64 length) {
 
 void sys_yield(){
 
-    run_next_app(TASK_MANAGER.processing_tcb.pid);
+    run_next_app(0);
+
 
 }
