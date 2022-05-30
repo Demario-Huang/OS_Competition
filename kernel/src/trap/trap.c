@@ -56,10 +56,10 @@ void trap_handler(){
         uint64 return_value = syscall(x17, args);
         if (return_value > 0){
             current_trap_cx.general_register[10] = return_value;
-            *((struct trap_context *)user_high_sp) = current_trap_cx;
+            *((struct trap_context *)phy_user_high_sp) = current_trap_cx;
         }
     }else{
         printf("[kernel] unrecognized scause!\n");
     }
-    run_app(TASK_MANAGER.processing_tcb.pid);
+    return_to_user();
 }
