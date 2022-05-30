@@ -25,6 +25,7 @@ struct User_MemorySet{
     struct Map_Area UserStackLow; // 4k
     struct Map_Area UserStackHigh; // Trampoline(4k) + TrapContext(4k)
     struct Map_Area Trampline;
+    struct Map_Area Kernel_Stack;   // 4k
 };
 
 void map_kernel();    // 将整个kernel建立联系

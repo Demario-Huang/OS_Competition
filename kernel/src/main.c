@@ -16,8 +16,7 @@
 #include "mm/MemorySet.h"
 #include "task_manager.h"
 
-extern uint64 app_0_start;
-extern uint64 app_0_end;
+extern struct task_manager TASK_MANAGER;
 
 void main(int num_core) {
     printf("[kernel] num of cores: %d \n", num_core);  // 通过寄存器entry.S中设置的寄存器a0来传这个num_core参数
@@ -30,11 +29,11 @@ void main(int num_core) {
 
     test_page_table();
 
+    TASK_MANAGER.number_of_apps = 0; 
     init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
     run_app(0);
 
     panic("[kernel] If this is printed, sth must get wrong!\n");
-    while (1) {}
 }
 
 

@@ -19,20 +19,16 @@
 #include "loader.h"
 
 
-
 extern void __alltraps();
-
-struct User_MemorySet current_mem_set;
+extern struct task_manager TASK_MANAGER;
 
 
 void init_app(uint64 num){
 
-    struct K_Stack new_kstack;
-    uint64 kernel_stack_top = new_kstack.stack;
-
     // 初始化进程管理
     // 第一步：初始化app的地址空间
-    current_mem_set = load(num + 1);    // 将应用程序load到主内存中
+    struct User_MemorySet current_mem_set = load(num + 1);    // 将应用程序load到主内存中
+    uint64 kernel_stack_top = current_mem_set.Kernel_Stack.end_addr;
 
     // 第二步：初始化进程上下文
     struct task_context app_task_context = new_task_cx(current_mem_set.text.start_addr, kernel_stack_top, current_mem_set.page_table.root_ppn);
@@ -64,6 +60,9 @@ void init_app(uint64 num){
 
     // 第三步: 将stvec修改成__alltraps的位置
     w_stvec(__alltraps);    
+
+
+    TASK_MANAGER.processing_tcb = app_tcb;
 }
 
 void run_app(uint64 num){

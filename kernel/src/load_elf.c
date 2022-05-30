@@ -110,5 +110,12 @@ struct User_MemorySet load_elf(uint64 elf_source){
     user_memory_set.Trampline = new_Map_Area(start_va, end_va, 0, 0b0101);
     push_Map_Area(user_memory_set.Trampline, user_memory_set.page_table, start_va, end_va);
 
+
+    // map kernel stack
+    start_va = KernerlStack;
+    end_va = start_va + KERNEL_STACK_SIZE;
+    user_memory_set.Kernel_Stack = new_Map_Area(start_va, end_va, 1, 0b0011);
+    push_Map_Area(user_memory_set.Kernel_Stack, user_memory_set.page_table, start_va, end_va);
+
     return user_memory_set;
 }
