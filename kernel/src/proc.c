@@ -26,10 +26,6 @@ struct User_MemorySet current_mem_set;
 
 
 void init_app(uint64 num){
-
-    struct K_Stack new_kstack;
-    uint64 kernel_stack_top = new_kstack.stack;
-
     // 初始化进程管理
     // 第一步：初始化app的地址空间
     current_mem_set = load(num + 1);    // 将应用程序load到主内存中

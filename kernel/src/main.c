@@ -30,8 +30,8 @@ void main(int num_core) {
 
     test_page_table();
 
-    init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
-    run_app(0);
+    // init_app(0); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
+    // run_app(0);
 
     panic("[kernel] If this is printed, sth must get wrong!\n");
     while (1) {}
