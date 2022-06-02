@@ -12,7 +12,6 @@ struct task_control_block new_task_control_block(struct task_context task_cx, ch
     TCB.task_context = task_cx;
     TCB.Kernel_stack = Kernel_stack;
     TCB.pid = alloct_pid();
-
     return TCB;
 }
 

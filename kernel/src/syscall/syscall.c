@@ -9,6 +9,7 @@
 #include "mm/MapArea.h"
 #include "mm/MemorySet.h"
 #include "mm/kmalloc.h"
+#include "task_manager.h"
 
 #define SYSCALL_READ 63
 #define SYSCALL_WRITE 64
@@ -20,20 +21,21 @@
 #define SYSCALL_EXEC 221
 #define SYSCALL_WAITPID 260
 
-extern uint64 num_of_apps;
-extern uint64 current_app;
-extern struct User_MemorySet current_mem_set;
+
+extern struct task_manager TASK_MANAGER;
 
 uint64 syscall(uint64 type, uint64 args[3]){
     if (type == SYSCALL_WRITE){
-        args[1] = translate(root_ppn_to_token(current_mem_set.page_table.root_ppn), args[1]);
+        args[1] = translate(root_ppn_to_token(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn), args[1]);
         sys_write(args[0], args[1], args[2]);
     }
     else if (type == SYSCALL_EXIT){
         sys_exit(args[0]);
     }
     else if (type == SYSCALL_YIELD){
-        panic("[kernel] We haven't implement yield system call, so you can't sleep! Keep working!\n");
+
+        sys_yield();
+
     }
     else if (type == SYSCALL_GET_TIME){
         return r_time() / 10000000;
@@ -46,14 +48,16 @@ uint64 syscall(uint64 type, uint64 args[3]){
 
 void sys_exit(uint64 exit_code){
     printf("[kernel] The application end with exit code: %d\n", exit_code);
+ 
+    if (TASK_MANAGER.processing_tcb.pid + 1 < 4){
 
-    // then, switch to another app. 
-    current_app += 1;
-    if (current_app < num_of_apps){
-        init_app(current_app);
+        init_app(TASK_MANAGER.processing_tcb.pid + 1);
+        run_next_app(TASK_MANAGER.processing_tcb.pid + 1);
+
     }else{
         panic("finish running all the apps!\n");
     }
+
 }
 
 uint64 sys_write(uint64 fd, char* buf, uint64 length) {
@@ -65,3 +69,8 @@ uint64 sys_write(uint64 fd, char* buf, uint64 length) {
     return length;
 }
 
+void sys_yield(){
+
+    run_next_app(TASK_MANAGER.processing_tcb.pid);
+
+}
