@@ -6,5 +6,6 @@
 
 #define USER_STACK_SIZE 4096
 #define USER_STACK_SIZE_FRAME 4
+#define KERNEL_STACK_SIZE 4096
 
 #endif
