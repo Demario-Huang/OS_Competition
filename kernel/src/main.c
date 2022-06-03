@@ -15,10 +15,7 @@
 #include "mm/MapArea.h"
 #include "mm/MemorySet.h"
 #include "task_manager.h"
-<<<<<<< HEAD
 #include "fs/fsinfo.h"
-=======
->>>>>>> 6fd289ae543ced2cf470eaa4358fa2983b3b825a
 
 extern struct task_manager TASK_MANAGER;
 
@@ -33,11 +30,10 @@ void main(int num_core) {
 
     test_page_table();
 
-<<<<<<< HEAD
+
     fs_init();
     printf("fs init.. and fs size is %d \n", fs_size);
     printf("fs 0 size is %d \n", Node_array[0].file_size);
-    printf("test a is %d \n", testa[0]);
     test();
 
 
@@ -45,14 +41,6 @@ void main(int num_core) {
     // init_all_apps(); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
     // timerinit();
     // run_next_app(1);
-=======
-
-    TASK_MANAGER.number_of_apps = 0; 
-    init_all_apps(); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
-    timerinit();
-    run_next_app(1);
->>>>>>> 6fd289ae543ced2cf470eaa4358fa2983b3b825a
-
 
     panic("[kernel] If this is printed, sth must get wrong!\n");
 }
