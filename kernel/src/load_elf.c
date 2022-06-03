@@ -106,7 +106,6 @@ struct User_MemorySet load_elf(uint64 elf_source){
 
     start_va = __restore;
     end_va = start_va + 1024;
-    printf("[load elf] the address of trap handler is %x\n", start_va);
     user_memory_set.Trampline = new_Map_Area(start_va, end_va, 0, 0b0101);
     push_Map_Area(user_memory_set.Trampline, user_memory_set.page_table, start_va, end_va);
 

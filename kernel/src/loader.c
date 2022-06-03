@@ -8,14 +8,17 @@
 #include "string.h"
 #include "mm/MemorySet.h"
 #include "load_elf.h"
+#include "proc.h"
+
 
 extern uint64 _num_app;
-int num_of_apps;
-uint64 current_app = 0;
+extern struct task_manager TASK_MANAGER;
+
+
 
 struct User_MemorySet load(uint64 app_index){
 
-    num_of_apps = *(uint64 *)(&_num_app);
+    uint64 num_of_apps = *(uint64 *)(&_num_app);
 
     uint64 start_addr = *(uint64 *)(&_num_app + app_index);
 

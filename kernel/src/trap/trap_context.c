@@ -5,7 +5,7 @@
 #include "types.h"
 
 
-struct trap_context new_trap_cx(uint64 spec, uint64 kernel_satp, uint64 trap_handler, uint64 user_stack_sp, uint64 kernel_stack_top){
+struct trap_context new_trap_cx(uint64 spec, uint64 kernel_satp, uint64 trap_handler, uint64 user_stack_sp, uint64 kernel_stack_top, uint64 sstatus){
     struct trap_context new_trap_context;
 
     for (int i = 0; i < 32; i++){      // 先将寄存器0初始化
@@ -17,6 +17,7 @@ struct trap_context new_trap_cx(uint64 spec, uint64 kernel_satp, uint64 trap_han
     new_trap_context.kernel_satp = kernel_satp;   
     new_trap_context.trap_handler = trap_handler;
     new_trap_context.kernel_stack = kernel_stack_top;
+    new_trap_context.sstatus = sstatus;
 
     return new_trap_context;
 }
