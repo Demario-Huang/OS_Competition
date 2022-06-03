@@ -73,3 +73,18 @@ void sys_yield(){
     run_next_app(0);
 
 }
+
+
+// open a file, return a fd (start file block)
+uint32 sys_fs_open(uint32* filename){
+
+}
+
+// read the file 
+uint32* sys_fs_read(uint32 fd, uint32 size){
+
+}
+
+
+// write the file into disk 
+void sys_fs_write(uint32 * data, uint32 size){}

@@ -95,7 +95,7 @@ SRC	+= \
 	$K/src/mm/MemorySet.c \
 	$K/src/load_elf.c \
 	$K/src/task/task_exchange.S \
-	
+	$K/src/fs/fsinfo.c \
 	
 
 # $K/trap/fcntxt.S 
@@ -195,6 +195,7 @@ ostest: $U/ostest2.c $U/usys.o
 dst=/mnt
 
 # Make fs image
+# file system is 512k, each block has 512byte
 fs:
 	@if [ ! -f "fs.img" ]; then \
 		echo "making fs image..."; \
