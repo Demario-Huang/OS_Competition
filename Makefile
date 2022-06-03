@@ -57,6 +57,9 @@ QEMUOPTS += -smp $(CPUS)
 
 QEMUOPTS += -bios $(SBI)
 
+# import virtual disk image
+QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 
+QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 # Open GDB server at localhost:1234
 ifeq ($(mode), debug)
@@ -198,19 +201,20 @@ fs:
 		dd if=/dev/zero of=fs.img bs=512k count=512; \
 		mkfs.vfat -F 32 -s 4 fs.img; fi
 	@sudo mount fs.img $(dst)
-	@make sdcard dst=$(dst)
 	@sudo umount $(dst)
 
-# Write sdcard mounted at $(dst)
-sdcard: user
-	@if [ ! -d "$(dst)/bin" ]; then sudo mkdir $(dst)/bin; fi
-	@for file in $$( ls $U/_* ); do \
-		sudo cp $$file $(dst)/bin/$${file#$U/_}; done
-	@sudo cp $U/_init $(dst)/init
-	@sudo cp $U/_sh $(dst)/sh
-	@sudo cp $U/shrc $(dst)/shrc
-	@sudo cp $U/_echo $(dst)/echo
-	@sudo cp README $(dst)/README
+# @make sdcard dst=$(dst)
+
+# # Write sdcard mounted at $(dst)
+# sdcard: user
+# 	@if [ ! -d "$(dst)/bin" ]; then sudo mkdir $(dst)/bin; fi
+# 	@for file in $$( ls $U/_* ); do \
+# 		sudo cp $$file $(dst)/bin/$${file#$U/_}; done
+# 	@sudo cp $U/_init $(dst)/init
+# 	@sudo cp $U/_sh $(dst)/sh
+# 	@sudo cp $U/shrc $(dst)/shrc
+# 	@sudo cp $U/_echo $(dst)/echo
+# 	@sudo cp README $(dst)/README
 
 .PHONY: clean run all fs sdcard user sbi sbi-clean
 
