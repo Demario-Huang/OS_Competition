@@ -94,6 +94,8 @@ SRC	+= \
 	$K/src/mm/MapArea.c \
 	$K/src/mm/MemorySet.c \
 	$K/src/load_elf.c \
+	$K/src/task/task_exchange.S \
+	
 	
 
 # $K/trap/fcntxt.S 
