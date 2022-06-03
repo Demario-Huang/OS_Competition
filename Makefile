@@ -95,7 +95,11 @@ SRC	+= \
 	$K/src/mm/MemorySet.c \
 	$K/src/load_elf.c \
 	$K/src/task/task_exchange.S \
+<<<<<<< HEAD
 	$K/src/fs/fsinfo.c \
+=======
+	
+>>>>>>> 6fd289ae543ced2cf470eaa4358fa2983b3b825a
 	
 
 # $K/trap/fcntxt.S 
@@ -195,7 +199,10 @@ ostest: $U/ostest2.c $U/usys.o
 dst=/mnt
 
 # Make fs image
+<<<<<<< HEAD
 # file system is 512k, each block has 512byte
+=======
+>>>>>>> 6fd289ae543ced2cf470eaa4358fa2983b3b825a
 fs:
 	@if [ ! -f "fs.img" ]; then \
 		echo "making fs image..."; \
