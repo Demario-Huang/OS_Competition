@@ -10,8 +10,9 @@ struct trap_context {
     uint64 kernel_satp;   // 内核根目录的物理页帧页数, 33
     uint64 trap_handler;  // trap_handler的地址, 34
     uint64 kernel_stack;  // 内核栈的位置，35
+    uint64 sstatus;   // 之前的内核态状态 36
 };
 
-struct trap_context new_trap_cx(uint64 spec, uint64 kernel_satp, uint64 trap_handler, uint64 user_stack_sp, uint64 kernel_stack_top);
+struct trap_context new_trap_cx(uint64 spec, uint64 kernel_satp, uint64 trap_handler, uint64 user_stack_sp, uint64 kernel_stack_top, uint64 sstatus);
 
 #endif
