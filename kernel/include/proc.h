@@ -11,8 +11,17 @@ static char UserStack_LOW_0[USER_STACK_SIZE];     // 同时，一个这样的用
 static char UserStack_HIGH_0[1024];
 static char KernerlStack[KERNEL_STACK_SIZE];
 
+void init_all_apps();
+
 void init_app(uint64 pid);
 
-void run_next_app(uint64 pid);
+void run_next_app(int init);
+
+void run_next_app_from_kernel(int init);
+
+uint64 scheduler();
+
+void timerinit();
+void set_next_timeout();
 
 #endif
