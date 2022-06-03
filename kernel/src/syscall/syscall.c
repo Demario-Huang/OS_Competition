@@ -48,11 +48,9 @@ uint64 syscall(uint64 type, uint64 args[3]){
 
 void sys_exit(uint64 exit_code){
     printf("[kernel] The application end with exit code: %d\n", exit_code);
- 
-    if (TASK_MANAGER.processing_tcb.pid + 1 < 4){
+    free_task_control_block(TASK_MANAGER.processing_tcb.pid);
 
-        free_task_control_block(TASK_MANAGER.processing_tcb.pid);
-        // init_app(TASK_MANAGER.processing_tcb.pid + 1);
+    if (TASK_MANAGER.number_of_apps > 0){
         run_next_app(0);
 
     }else{
@@ -73,6 +71,5 @@ uint64 sys_write(uint64 fd, char* buf, uint64 length) {
 void sys_yield(){
 
     run_next_app(0);
-
 
 }

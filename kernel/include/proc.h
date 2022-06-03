@@ -17,6 +17,11 @@ void init_app(uint64 pid);
 
 void run_next_app(int init);
 
+void run_next_app_from_kernel(int init);
+
 uint64 scheduler();
+
+void timerinit();
+void set_next_timeout();
 
 #endif

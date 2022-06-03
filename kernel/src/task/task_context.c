@@ -8,13 +8,14 @@
 struct task_context new_task_cx(uint64 app_entry, uint64 app_sp, uint64 app_satp){
     struct task_context new_task_context;
 
-    for (int i = 0; i < 32; i++){
+    for (int i = 0; i < 12; i++){
         new_task_context.general_register[i] = 0;
     }
 
     new_task_context.ra = app_entry;
     new_task_context.sp = app_sp;
     new_task_context.satp = app_satp;
+
 
     return new_task_context;
 }
