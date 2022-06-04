@@ -2,7 +2,7 @@
 #define __PID_ALLOCATOR_H
 
 #include "types.h"
-#define MAX_NUM_OF_APPS 10   // 暂时只允许10个应用程序同时载入
+#define MAX_NUM_OF_APPS 20   // 暂时只允许20个应用程序同时载入
 
 static int PID_BITMAP[MAX_NUM_OF_APPS];    // kind of a bitmap to indicate whether one pid is valid. 0 means valid
 

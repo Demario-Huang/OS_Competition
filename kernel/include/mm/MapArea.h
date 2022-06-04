@@ -21,7 +21,7 @@ struct Map_Area new_Map_Area(uint64 start_addr, uint64 end_addr, uint64 map_type
 void push_Map_Area(struct Map_Area map_area, struct PageTable pg, uint64 copy_start, uint64 copy_end);   // copy_start要拷贝位置的起点指针
 
 // 给一个起始物理页号和拷贝位置的起点指针，将相应内容拷贝到物理页帧中
-void copy_to_frame(uint64 ppn, uint64 copy_start, uint64 copy_end);  
+void copy_to_frame(uint64 ppn, uint64 copy_start, uint64 copy_end, uint64 start_offset);  
 
 // 释放一个MapArea中的所有页表，并将其映射的物理页帧释放。
 void free_Map_Area(struct Map_Area map_area, struct PageTable pg);  

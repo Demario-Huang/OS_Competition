@@ -13,7 +13,7 @@ static char KernerlStack[KERNEL_STACK_SIZE];
 
 void init_all_apps();
 
-void init_app(uint64 pid);
+void init_app(uint64 app_name);
 
 void run_next_app(int init);
 
@@ -23,5 +23,9 @@ uint64 scheduler();
 
 void timerinit();
 void set_next_timeout();
+
+
+uint64 tcb_clone(uint64 target_pid);
+
 
 #endif

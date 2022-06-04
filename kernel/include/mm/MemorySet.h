@@ -34,4 +34,6 @@ uint64 root_ppn_to_token(uint64 root_ppn);
 
 void activate_mm();
 
+struct User_MemorySet copy_mem_set(struct User_MemorySet target_mem_set);
+
 #endif

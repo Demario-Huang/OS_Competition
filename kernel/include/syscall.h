@@ -9,4 +9,6 @@ void sys_exit(uint64 exit_code);
 
 uint64 sys_write(uint64 fd, char* buf, uint64 length);
 
+uint64 sys_fork();
+
 #endif 

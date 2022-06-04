@@ -92,17 +92,16 @@ struct User_MemorySet load_elf(uint64 elf_source){
     // low
     uint64 start_va = UserStack_LOW_0;
     uint64 end_va = start_va + USER_STACK_SIZE;
-
-    user_memory_set.UserStackLow = new_Map_Area(start_va, end_va, 1, 0b1011);
+    user_memory_set.UserStackLow = new_Map_Area(0x80800000, 0x80800000 + USER_STACK_SIZE - 4, 1, 0b1011);
     push_Map_Area(user_memory_set.UserStackLow, user_memory_set.page_table, start_va, end_va);
     
     // High
     start_va = UserStack_HIGH_0;
     end_va = start_va + 1024;
-
-
-    user_memory_set.UserStackHigh = new_Map_Area(start_va, end_va, 1, 0b0011);
+    user_memory_set.UserStackHigh = new_Map_Area(0x80900000, 0x80900000 + 1024, 1, 0b0011);
     push_Map_Area(user_memory_set.UserStackHigh, user_memory_set.page_table, start_va, end_va);
+
+
 
     start_va = __restore;
     end_va = start_va + 1024;
@@ -113,8 +112,10 @@ struct User_MemorySet load_elf(uint64 elf_source){
     // map kernel stack
     start_va = KernerlStack;
     end_va = start_va + KERNEL_STACK_SIZE;
-    user_memory_set.Kernel_Stack = new_Map_Area(start_va, end_va, 1, 0b0011);
+    user_memory_set.Kernel_Stack = new_Map_Area(0x80700000, 0x80700000 + KERNEL_STACK_SIZE - 4, 1, 0b0011);
     push_Map_Area(user_memory_set.Kernel_Stack, user_memory_set.page_table, start_va, end_va);
 
     return user_memory_set;
 }
+
+

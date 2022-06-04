@@ -58,8 +58,8 @@ QEMUOPTS += -smp $(CPUS)
 QEMUOPTS += -bios $(SBI)
 
 # import virtual disk image
-QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 
-QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+# QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 
+# QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 # Open GDB server at localhost:1234
 ifeq ($(mode), debug)
@@ -195,6 +195,7 @@ ostest: $U/ostest2.c $U/usys.o
 dst=/mnt
 
 # Make fs image
+
 # file system is 512k, each block has 512byte
 fs:
 	@if [ ! -f "fs.img" ]; then \
