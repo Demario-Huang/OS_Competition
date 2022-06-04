@@ -58,8 +58,8 @@ QEMUOPTS += -smp $(CPUS)
 QEMUOPTS += -bios $(SBI)
 
 # import virtual disk image
-QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 
-QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
+# QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 
+# QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 # Open GDB server at localhost:1234
 ifeq ($(mode), debug)
@@ -195,13 +195,13 @@ ostest: $U/ostest2.c $U/usys.o
 dst=/mnt
 
 # Make fs image
-fs:
-	@if [ ! -f "fs.img" ]; then \
-		echo "making fs image..."; \
-		dd if=/dev/zero of=fs.img bs=512k count=512; \
-		mkfs.vfat -F 32 -s 4 fs.img; fi
-	@sudo mount fs.img $(dst)
-	@sudo umount $(dst)
+# fs:
+# 	@if [ ! -f "fs.img" ]; then \
+# 		echo "making fs image..."; \
+# 		dd if=/dev/zero of=fs.img bs=512k count=512; \
+# 		mkfs.vfat -F 32 -s 4 fs.img; fi
+# 	@sudo mount fs.img $(dst)
+# 	@sudo umount $(dst)
 
 # @make sdcard dst=$(dst)
 

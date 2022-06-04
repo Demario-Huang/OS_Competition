@@ -64,7 +64,7 @@ uint64 get_PTE_ppn(uint64 PTE_addr){   // 从PTE中取出其指向的物理页�
 }
 
 
-void map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags){
+uint64 map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags){
     uint64 root_ppn = pg.root_ppn;
 
     uint64 ppn_2 = get_ppn_2(vpn);
@@ -98,7 +98,10 @@ void map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags){
         flags = (flags << 1) + 1;    // 左移一位加一：加上valid bit
         set_permission(PTE_addr, flags); 
         set_PTE_ppn(PTE_addr, ppn);  // 一级页表 -> 零级页表
+    }else{
+        return get_PTE_ppn(PTE_addr);     // means the PTE has already been taken
     }
+    return 0;   // means finish mapping.
 }
 
 

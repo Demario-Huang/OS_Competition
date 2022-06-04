@@ -8,6 +8,7 @@
 #include "mm/framealloc.h"
 #include "mm/MapArea.h"
 #include "console.h"
+#include "trap_context.h"
 
 struct Map_Area new_Map_Area(uint64 start_addr, uint64 end_addr, uint64 map_type, uint64 permissions){
     uint64 start_vpn = (start_addr) / PAGE_SIZE;
@@ -25,10 +26,11 @@ struct Map_Area new_Map_Area(uint64 start_addr, uint64 end_addr, uint64 map_type
     return new_map_area;
 }
 
-void copy_to_frame(uint64 ppn, uint64 copy_start, uint64 copy_end){
-    uint64 phys_addr_start = to_physical_addr(ppn);
+void copy_to_frame(uint64 ppn, uint64 copy_start, uint64 copy_end, uint64 start_offset){
+    uint64 phys_addr_start = to_physical_addr(ppn) + start_offset;
+
     if (copy_end == 0){
-        for (int i = 0; i < PAGE_SIZE; i++){
+        for (int i = 0; i < PAGE_SIZE - start_offset; i++){
             *(char*)(phys_addr_start + i) = *(char*)(copy_start + i);
         }
     }else{
@@ -44,20 +46,32 @@ void push_Map_Area(struct Map_Area map_area, struct PageTable pg, uint64 copy_st
     uint64 vpn_end = map_area.vpn_end;
     uint64 permission = map_area.permission;
 
+    uint64 start_addr = map_area.start_addr;
+    uint64 start_offset = start_addr & 0b111111111111;
+
     if (map_type == 0){    // 进行Identical的映射
         for (uint64 vpn = vpn_start; vpn <= vpn_end; vpn++){
             map(pg, vpn, vpn, permission);
         }
     }else if (map_type == 1){    // 进行Framed映射
+
         for (uint64 vpn = vpn_start; vpn < vpn_end; vpn++){
+
             uint64 target_ppn = get_frame();
-            copy_to_frame(target_ppn, copy_start, 0);    // 将目标值拷贝进页帧
-            map(pg, vpn, target_ppn, permission);
-            copy_start += PAGE_SIZE;
+            uint64 map_status = map(pg, vpn, target_ppn, permission);
+            if (map_status != 0){                                      // the vpn has already been mapped
+                free_frame(target_ppn);
+                target_ppn = map_status;
+            }
+            copy_to_frame(target_ppn, copy_start, 0, start_offset);    // 将目标值拷贝进页帧
+            copy_start += PAGE_SIZE - start_offset;
+            if (start_offset != 0){
+                start_offset = 0;
+            }
         }
         if (copy_end > copy_start){
             uint64 target_ppn = get_frame();
-            copy_to_frame(target_ppn, copy_start, copy_end);
+            copy_to_frame(target_ppn, copy_start, copy_end, start_offset);
             map(pg, vpn_end, target_ppn, permission);
         }
     }else{

@@ -40,6 +40,9 @@ uint64 syscall(uint64 type, uint64 args[3]){
     else if (type == SYSCALL_GET_TIME){
         return r_time() / 10000000;
     }
+    else if (type == SYSCALL_FORK){
+        return sys_fork();
+    }
     else{
         printf("[kernel] Not supported system call: %d\n", type);
     }
@@ -71,5 +74,14 @@ uint64 sys_write(uint64 fd, char* buf, uint64 length) {
 void sys_yield(){
 
     run_next_app(0);
+
+}
+
+
+uint64 sys_fork(){
+
+    uint64 pid = tcb_clone(TASK_MANAGER.processing_tcb.pid);
+
+    return pid;
 
 }

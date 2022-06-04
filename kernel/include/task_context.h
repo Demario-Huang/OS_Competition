@@ -13,4 +13,6 @@ struct task_context {
 
 struct task_context new_task_cx(uint64 app_entry, uint64 app_sp, uint64 app_satp);
 
+struct task_context copy_task_context(struct task_context target_task_context);
+
 #endif
