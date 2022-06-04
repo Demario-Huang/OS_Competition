@@ -6,24 +6,26 @@
 #include "panic.h"
 #include "types.h"
 #include "string.h"
+#include "mm/MemorySet.h"
+#include "load_elf.h"
+#include "proc.h"
+
 
 extern uint64 _num_app;
+extern struct task_manager TASK_MANAGER;
 
 
-void load(){
 
-    int num_of_apps = *(uint64 *)(&_num_app);
+struct User_MemorySet load(uint64 app_index){
 
-    uint64 entry = 0x80400000;
-    for (int i = 1; i <= num_of_apps; i++){
-        uint64 start_addr = *(uint64 *)(&_num_app + i);
-        uint64 end_addr = *(uint64 *)(&_num_app + i + num_of_apps);
-        uint64 size = end_addr - start_addr;
+    uint64 num_of_apps = *(uint64 *)(&_num_app);
 
-        memcpy(entry, start_addr, size);
-        entry += 0x20000;
-    }
+    uint64 start_addr = *(uint64 *)(&_num_app + app_index);
 
+    // 将elf文件解析开
+    struct User_MemorySet new_mem_set = load_elf(start_addr);
+
+    return new_mem_set;
 }
 
 void zero_init(uint64 start, uint64 end){

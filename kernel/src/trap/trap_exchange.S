@@ -24,10 +24,10 @@ __alltraps:
         .set n, n+1
     .endr
     # we can use t0/t1/t2 freely, because they have been saved in TrapContext
-    # csrr t0, sstatus
+    csrr t0, sstatus
     csrr t1, sepc
     addi t1, t1, 4   # 我自己加的，想让其指向下一条指令
-    # sd t0, 32*8(sp)
+    sd t0, 36*8(sp)
     sd t1, 32*8(sp)
     # read user stack from sscratch and save it in TrapContext
     csrr t2, sscratch
@@ -45,17 +45,18 @@ __alltraps:
     jr t1
 
 __restore:
-    # a0: *TrapContext in user space(Constant); a1: user space token
+    # a0: 用户栈栈顶; a1: user space token
     # switch to user space
-    # csrw satp, a1       # 因为还没有开启分页，暂时还没有这个功能
+    fence.i
+    csrw satp, a1       # 切换到应用程序的页表
     sfence.vma
     csrw sscratch, a0
     mv sp, a0
     # now sp points to TrapContext in user space, start restoring based on it
     # restore sstatus/sepc
-    # ld t0, 32*8(sp)
+    ld t0, 36*8(sp)
     ld t1, 32*8(sp)
-    # csrw sstatus, t0
+    csrw sstatus, t0
     csrw sepc, t1
     # restore general purpose registers except x0/sp/tp
     ld x1, 1*8(sp)

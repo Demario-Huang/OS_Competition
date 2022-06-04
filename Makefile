@@ -49,14 +49,17 @@ endif
 # QEMU 
 CPUS := 1
 
-
 QEMUOPTS = -machine virt -kernel $T/kernel  -nographic
+# QEMUOPTS = -machine virt -kernel $T/kernel  -nographic -s -S
 
 # use multi-core 
 QEMUOPTS += -smp $(CPUS)
 
 QEMUOPTS += -bios $(SBI)
 
+# import virtual disk image
+QEMUOPTS += -drive file=fs.img,if=none,format=raw,id=x0 
+QEMUOPTS += -device virtio-blk-device,drive=x0,bus=virtio-mmio-bus.0
 
 # Open GDB server at localhost:1234
 ifeq ($(mode), debug)
@@ -79,7 +82,7 @@ SRC	+= \
 	$K/src/loader.c \
 	$K/src/string.c \
 	$K/src/proc.c \
-	$K/src/framealloc.c \
+	$K/src/mm/framealloc.c \
 	$K/src/syscall/syscall.c \
 	$K/src/trap/trap_exchange.S \
 	$K/src/task/task_context.c \
@@ -87,7 +90,14 @@ SRC	+= \
 	$K/src/task/pid_allocator.c \
 	$K/src/task/task_manager.c \
 	$K/src/mm/pagetable.c \
+	$K/src/mm/kmalloc.c \
+	$K/src/mm/MapArea.c \
+	$K/src/mm/MemorySet.c \
+	$K/src/load_elf.c \
+	$K/src/task/task_exchange.S \
+	$K/src/fs/fsinfo.c \
 
+	
 # $K/trap/fcntxt.S 
 
 
@@ -185,25 +195,27 @@ ostest: $U/ostest2.c $U/usys.o
 dst=/mnt
 
 # Make fs image
+# file system is 512k, each block has 512byte
 fs:
 	@if [ ! -f "fs.img" ]; then \
 		echo "making fs image..."; \
 		dd if=/dev/zero of=fs.img bs=512k count=512; \
 		mkfs.vfat -F 32 -s 4 fs.img; fi
 	@sudo mount fs.img $(dst)
-	@make sdcard dst=$(dst)
 	@sudo umount $(dst)
 
-# Write sdcard mounted at $(dst)
-sdcard: user
-	@if [ ! -d "$(dst)/bin" ]; then sudo mkdir $(dst)/bin; fi
-	@for file in $$( ls $U/_* ); do \
-		sudo cp $$file $(dst)/bin/$${file#$U/_}; done
-	@sudo cp $U/_init $(dst)/init
-	@sudo cp $U/_sh $(dst)/sh
-	@sudo cp $U/shrc $(dst)/shrc
-	@sudo cp $U/_echo $(dst)/echo
-	@sudo cp README $(dst)/README
+# @make sdcard dst=$(dst)
+
+# # Write sdcard mounted at $(dst)
+# sdcard: user
+# 	@if [ ! -d "$(dst)/bin" ]; then sudo mkdir $(dst)/bin; fi
+# 	@for file in $$( ls $U/_* ); do \
+# 		sudo cp $$file $(dst)/bin/$${file#$U/_}; done
+# 	@sudo cp $U/_init $(dst)/init
+# 	@sudo cp $U/_sh $(dst)/sh
+# 	@sudo cp $U/shrc $(dst)/shrc
+# 	@sudo cp $U/_echo $(dst)/echo
+# 	@sudo cp README $(dst)/README
 
 .PHONY: clean run all fs sdcard user sbi sbi-clean
 
