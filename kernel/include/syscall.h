@@ -11,4 +11,8 @@ uint64 sys_write(uint64 fd, char* buf, uint64 length);
 
 uint64 sys_fork();
 
+void sys_exec(uint64 path);
+
+void sys_wait();
+
 #endif 
