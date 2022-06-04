@@ -1,4 +1,3 @@
-
 #![no_std]
 #![no_main]
 #![allow(clippy::needless_range_loop)]
@@ -69,4 +68,3 @@ pub fn main() -> i32 {
     println!("matrix passed.");
     0
 }
-
