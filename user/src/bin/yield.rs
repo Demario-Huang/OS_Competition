@@ -1,4 +1,3 @@
-
 #![no_std]
 #![no_main]
 
@@ -16,4 +15,3 @@ pub fn main() -> i32 {
     println!("yield pass.");
     0
 }
-

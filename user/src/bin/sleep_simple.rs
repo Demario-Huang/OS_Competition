@@ -1,4 +1,3 @@
-
 #![no_std]
 #![no_main]
 
@@ -22,4 +21,3 @@ pub fn main() -> i32 {
     println!("r_sleep passed!");
     0
 }
-
