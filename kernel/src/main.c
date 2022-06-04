@@ -22,15 +22,21 @@ extern struct task_manager TASK_MANAGER;
 void main(int num_core) {
     printf("[kernel] num of cores: %d \n", num_core);  // 通过寄存器entry.S中设置的寄存器a0来传这个num_core参数
     initmalloc();
-    test_alloc();
+    // test_alloc();
 
     map_kernel();
     activate_mm();
     printf("[kernel] ok to activate mm! Back to Kernel!\n");
 
-    test_page_table();
+    // test_page_table();
 
 
+    TASK_MANAGER.number_of_apps = 0; 
+
+    init_app("initproc");   // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。
+    // init_all_apps(); 
+    timerinit();
+    run_next_app(1);
     fs_init();
 
     // TASK_MANAGER.number_of_apps = 0; 

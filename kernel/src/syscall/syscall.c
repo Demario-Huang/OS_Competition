@@ -41,6 +41,9 @@ uint64 syscall(uint64 type, uint64 args[3]){
     else if (type == SYSCALL_GET_TIME){
         return r_time() / 10000000;
     }
+    else if (type == SYSCALL_FORK){
+        return sys_fork();
+    }
     else{
         printf("[kernel] Not supported system call: %d\n", type);
     }
@@ -75,6 +78,15 @@ void sys_yield(){
 
 }
 
+
+uint64 sys_fork(){
+
+    uint64 pid = tcb_clone(TASK_MANAGER.processing_tcb.pid);
+
+    return pid;
+
+}
+
 // open a file, return a fd (start file block)
 uint32 sys_fs_open(uint8* filename){
 }
@@ -87,3 +99,4 @@ uint32* sys_fs_read(uint32 fd, uint32 size){
 
 // write the file into disk 
 void sys_fs_write(uint32 * data, uint32 size){}
+

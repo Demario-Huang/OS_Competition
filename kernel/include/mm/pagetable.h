@@ -36,7 +36,7 @@ uint64 get_PTE_ppn(uint64 PTE_addr);
 struct PageTable new_pagetable();
 
 // 给定一个虚拟页号，一个物理物理页号，建立page_table来形成映射关系
-void map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags);
+uint64 map(struct PageTable pg, uint64 vpn, uint64 ppn, uint64 flags);
 
 // 给定一个虚拟页号，释放其映射的物理页帧，并清空对应的PTE
 void unmap(struct PageTable pg, uint64 vpn);

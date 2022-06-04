@@ -27,11 +27,12 @@ extern struct task_manager TASK_MANAGER;
 extern uint64 _num_app;
 
 
-void init_app(uint64 pid){
+void init_app(uint64 app_name){
 
     // 初始化进程管理
     // 第一步：初始化app的地址空间
-    struct User_MemorySet current_mem_set = load(pid + 1);    // 将应用程序load到主内存中
+    struct User_MemorySet current_mem_set = load(app_name);    // 将应用程序load到主内存中
+
     uint64 kernel_stack_top = current_mem_set.Kernel_Stack.end_addr;
 
     // 第二步：初始化进程上下文
@@ -80,13 +81,15 @@ uint64 scheduler(){
         next_pid = (next_pid + 1) % MAX_NUM_OF_APPS;
     }
 
+    printf("[scheduler] schedule to nex pid: %d\n", next_pid);
+
     return next_pid;
 
 }
 
 // 开启时钟中断  - 有关timer的这两个函数照搬了xv6的
 void timerinit(){
-    w_sie(r_sie() | SIE_STIE);
+    // w_sie(r_sie() | SIE_STIE);
     set_next_timeout();
     printf("[kernel] timerinit\n");
 }
@@ -109,7 +112,6 @@ void init_all_apps(){
 }
 
 void run_next_app(int init){
-
     if (init == 1){
         TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[0];
         return_to_user();
@@ -119,29 +121,28 @@ void run_next_app(int init){
     uint64 pid = scheduler();
 
     TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[pid];
-
 }
 
 
 void run_next_app_from_kernel(int init){
+    panic("Wrong if enter into this function!\n");
+}
 
-    if (init == 1){
-        TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[0];
-        return_to_user();
-        return 0;
-    }
 
-    uint64 previous_pid = TASK_MANAGER.processing_tcb.pid;
-    uint64 a0 = &(TASK_MANAGER.TASK_MANAGER_CONTAINER[previous_pid].task_context);
-    uint64 pid = scheduler();
-    uint64 a1 = &(TASK_MANAGER.TASK_MANAGER_CONTAINER[pid].task_context);
+uint64 tcb_clone(uint64 target_pid){
 
-    TASK_MANAGER.processing_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[pid];
+    struct task_control_block target_tcb = TASK_MANAGER.TASK_MANAGER_CONTAINER[target_pid];
 
-    
-    printf("[from kernel] prepare to return to %x\n", TASK_MANAGER.TASK_MANAGER_CONTAINER[pid].task_context.ra);
-    // 将a0的信息存入tcb
-    // 将a1的信息从tcb放入寄存器
-    __switch(a0, a1);
+    // 对于新的进程，复制父进程地址空间
+    struct User_MemorySet clone_mem_set = copy_mem_set(target_tcb.memoryset);
+    struct task_context clone_task_context = target_tcb.task_context;
+
+    uint64 kernel_stack_top = clone_mem_set.Kernel_Stack.end_addr;
+    struct task_control_block clone_tcb = new_task_control_block(clone_task_context,  kernel_stack_top);
+    clone_tcb.memoryset = clone_mem_set;
+    clone_tcb.user_token = root_ppn_to_token(clone_mem_set.page_table.root_ppn);
+    add_task_control_block(clone_tcb);
+
+    return clone_tcb.pid;
 
 }

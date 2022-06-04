@@ -31,7 +31,11 @@ void return_to_user(){
     uint64 a1 = root_ppn_to_token(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn);    // 用户satp
     uint64 a0 = TASK_MANAGER.processing_tcb.memoryset.UserStackHigh.start_addr;      // trap context的位置
 
+    // printf("the a1 is %x\n", a1);
+    // printf("the a0 is %x\n", translate(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn, a0));
+
     w_stvec(__alltraps);
+    // printf("the address of __restore is %x\n", __restore);
     __restore(a0, a1);
 }
 
@@ -96,7 +100,9 @@ void trap_handler(){
         }
     }
     else{
-        printf("[kernel] unrecognized scause: %d!\n", scause);
+        panic("[kernel] unrecognized scause: %d!\n", scause);
     }
+
+    // panic("here ok!\n");
     return_to_user();
 }

@@ -3,6 +3,6 @@
 
 #include "types.h"
 
-struct User_MemorySet load(uint64 app_index);
+struct User_MemorySet load(uint64 str_addr);
 
 #endif
