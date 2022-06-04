@@ -11,6 +11,7 @@
 #include "mm/kmalloc.h"
 #include "task_manager.h"
 #include "fs/fsinfo.h"
+#include "fs/driver.h"
 #include "trap_context.h"
 
 #define SYSCALL_READ 63
@@ -98,15 +99,31 @@ uint64 sys_fork(){
 
 // open a file, return a fd (start file block)
 uint32 sys_fs_open(uint8* filename){
+  uint32 fd;
+  if (!IfExistFile) {
+    fd = fs_create_Inode(filename);
+    return fd;
+  } else {
+    fd = FindByfilename(filename);
+    return fd;
+  }
 }
 
-// read the file 
+// read the file, could directly read the disk, do not do the protection like identiy the fd is valid
 uint32* sys_fs_read(uint32 fd, uint32 size){
-
+  return driver_read_fs(fd, size);
 }
 
 // write the file into disk 
-void sys_fs_write(uint32 * data, uint32 size){}
+void sys_fs_write(uint32 * data, uint32 fd,uint32 size){
+  driver_write_fs(data, fd, size);
+  update_Inode(fd, size);
+}
+
+void sys_fs_close(uint32 fd){
+  fd = -1;
+  return;
+}
 
 
 void sys_exec(uint64 path){
@@ -135,16 +152,6 @@ void sys_wait(){
         run_next_app(0);
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

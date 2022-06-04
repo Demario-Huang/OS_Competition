@@ -13,8 +13,10 @@ static uint32 inode_start = 20 ;
 static uint32 inode_block_num = 50;
 
 static uint32 data_block_start = 100;
-static uint32 data_block_end = 100;
-static uint32 data_total_num = 0;
+static uint32 current_data_block_end = 100;
+static uint32 datablock_total_num = 0;
+
+static uint32 current_Inode_index = 0;
 
 
 // 内核中为inode创建链表
@@ -36,6 +38,13 @@ static Inode Node_array[20];
 void fsinit();
 
 uint32 IfExistFile(uint8 * filename);
+
+uint32 FindByfilename(uint8 * filename);
+
+// return the start block as fd
+uint32 fs_create_Inode( uint8 * filename );
+
+void update_Inode(uint32 fd, uint32 size);
 
 uint32 fsgetsize();
 
