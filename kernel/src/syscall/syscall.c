@@ -11,6 +11,7 @@
 #include "mm/kmalloc.h"
 #include "task_manager.h"
 #include "fs/fsinfo.h"
+#include "trap_context.h"
 
 #define SYSCALL_READ 63
 #define SYSCALL_WRITE 64
@@ -34,9 +35,7 @@ uint64 syscall(uint64 type, uint64 args[3]){
         sys_exit(args[0]);
     }
     else if (type == SYSCALL_YIELD){
-
         sys_yield();
-
     }
     else if (type == SYSCALL_GET_TIME){
         return r_time() / 10000000;
@@ -44,8 +43,17 @@ uint64 syscall(uint64 type, uint64 args[3]){
     else if (type == SYSCALL_FORK){
         return sys_fork();
     }
+    else if (type == SYSCALL_WAITPID){
+
+        sys_wait();
+
+    }
+    else if (type == SYSCALL_EXEC){
+        uint64 path = translate(root_ppn_to_token(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn), args[0]);
+        sys_exec(path);
+    }
     else{
-        printf("[kernel] Not supported system call: %d\n", type);
+        panic("[kernel] Not supported system call: %d\n", type);
     }
     return 0;
 }
@@ -53,6 +61,7 @@ uint64 syscall(uint64 type, uint64 args[3]){
 void sys_exit(uint64 exit_code){
     printf("[kernel] The application end with exit code: %d\n", exit_code);
     free_task_control_block(TASK_MANAGER.processing_tcb.pid);
+    sys_unlock_wait(TASK_MANAGER.processing_tcb.pid);
 
     if (TASK_MANAGER.number_of_apps > 0){
         run_next_app(0);
@@ -96,7 +105,77 @@ uint32* sys_fs_read(uint32 fd, uint32 size){
 
 }
 
-
 // write the file into disk 
 void sys_fs_write(uint32 * data, uint32 size){}
+
+
+void sys_exec(uint64 path){
+    
+    exec_new_app(path);
+
+    if (TASK_MANAGER.number_of_apps > 0){
+        run_next_app(0);
+    }
+}
+
+
+void sys_wait(){
+    if (TASK_MANAGER.processing_tcb.waiting == -1){
+        pc_back_one_inst();
+        run_next_app(0);
+    } 
+    else if (TASK_MANAGER.processing_tcb.waiting == -2){
+        TASK_MANAGER.TASK_MANAGER_CONTAINER[TASK_MANAGER.processing_tcb.pid].waiting = 0;    // been unlock
+        return 0;
+    }
+    else{
+        TASK_MANAGER.TASK_MANAGER_CONTAINER[TASK_MANAGER.processing_tcb.pid].waiting = -1;   // set its status to be waiting!
+        printf("[kernel] pid %d begin waiting!\n", TASK_MANAGER.processing_tcb.pid);
+        pc_back_one_inst();
+        run_next_app(0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Two auxilary functions for sys_wait()
+
+void sys_unlock_wait(uint64 self_pid){
+    
+    for (int pid_i = 0; pid_i < MAX_NUM_OF_APPS; pid_i ++){
+        if (TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting == -1){
+            TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting = -2;
+            printf("[kernel] pid %d unlock pid %d\n", self_pid, pid_i);
+        }
+        if (TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting == self_pid){
+            TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting = -2;
+        }
+    }
+}
+
+void pc_back_one_inst(){
+
+    uint64 user_high_sp = TASK_MANAGER.processing_tcb.memoryset.UserStackHigh.start_addr;
+        
+    uint64 phy_user_high_sp = translate(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn, user_high_sp);
+
+    struct trap_context current_trap_cx = *((struct trap_context *)phy_user_high_sp);
+
+    current_trap_cx.spec = current_trap_cx.spec - 4;    // re-run the current instruction
+    *((struct trap_context *)phy_user_high_sp) = current_trap_cx;
+
+}
+    
 
