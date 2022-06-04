@@ -27,5 +27,7 @@ void set_next_timeout();
 
 uint64 tcb_clone(uint64 target_pid);
 
+void exec_new_app(uint64 path);
+
 
 #endif

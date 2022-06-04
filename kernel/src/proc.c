@@ -39,7 +39,7 @@ void init_app(uint64 app_name){
     struct task_context app_task_context = new_task_cx(return_to_user, kernel_stack_top, root_ppn_to_token(current_mem_set.page_table.root_ppn));
 
     // 第三步：初始化TCB
-    struct task_control_block app_tcb = new_task_control_block(app_task_context,  kernel_stack_top);
+    struct task_control_block app_tcb = new_task_control_block(app_task_context,  kernel_stack_top, 0);
     app_tcb.memoryset = current_mem_set;
     app_tcb.user_token = root_ppn_to_token(current_mem_set.page_table.root_ppn);
 
@@ -77,11 +77,9 @@ uint64 scheduler(){
 
     uint64 next_pid = (current_pid + 1) % MAX_NUM_OF_APPS;
 
-    while(!check_valid(next_pid)){
+    while((!check_valid(next_pid))){
         next_pid = (next_pid + 1) % MAX_NUM_OF_APPS;
     }
-
-    printf("[scheduler] schedule to nex pid: %d\n", next_pid);
 
     return next_pid;
 
@@ -89,7 +87,7 @@ uint64 scheduler(){
 
 // 开启时钟中断  - 有关timer的这两个函数照搬了xv6的
 void timerinit(){
-    // w_sie(r_sie() | SIE_STIE);
+    w_sie(r_sie() | SIE_STIE);
     set_next_timeout();
     printf("[kernel] timerinit\n");
 }
@@ -138,11 +136,42 @@ uint64 tcb_clone(uint64 target_pid){
     struct task_context clone_task_context = target_tcb.task_context;
 
     uint64 kernel_stack_top = clone_mem_set.Kernel_Stack.end_addr;
-    struct task_control_block clone_tcb = new_task_control_block(clone_task_context,  kernel_stack_top);
+    struct task_control_block clone_tcb = new_task_control_block(clone_task_context,  kernel_stack_top, 0);
     clone_tcb.memoryset = clone_mem_set;
     clone_tcb.user_token = root_ppn_to_token(clone_mem_set.page_table.root_ppn);
     add_task_control_block(clone_tcb);
 
     return clone_tcb.pid;
 
+}
+
+// modification of init_app()
+exec_new_app(uint64 path){
+    
+    uint64 current_pid = TASK_MANAGER.processing_tcb.pid;
+
+    struct User_MemorySet current_mem_set = load(path);    // 将应用程序load到主内存中
+    uint64 kernel_stack_top = current_mem_set.Kernel_Stack.end_addr;
+    struct task_context app_task_context = new_task_cx(return_to_user, kernel_stack_top, root_ppn_to_token(current_mem_set.page_table.root_ppn));
+    struct task_control_block app_tcb = new_task_control_block(app_task_context,  kernel_stack_top, current_pid);
+
+    app_tcb.memoryset = current_mem_set;
+    app_tcb.user_token = root_ppn_to_token(current_mem_set.page_table.root_ppn);
+
+    TASK_MANAGER.TASK_MANAGER_CONTAINER[current_pid] = app_tcb;
+    TASK_MANAGER.number_of_apps += 1;
+
+
+    uint64 user_low_sp = current_mem_set.UserStackLow.end_addr;
+    uint64 app_entry = current_mem_set.text.start_addr;  // app执行的第一条指令位置
+    uint64 kernel_satp = r_satp();   
+    uint64 app_trap_handler = trap_handler;
+    uint64 sstatus = r_sstatus();
+    struct trap_context app_trap_context = new_trap_cx(app_entry, kernel_satp, app_trap_handler, user_low_sp, kernel_stack_top, sstatus);
+
+    uint64 user_high_sp = current_mem_set.UserStackHigh.start_addr;
+    uint64 phy_user_high_sp = translate(current_mem_set.page_table.root_ppn, user_high_sp);
+    *((struct trap_context *)phy_user_high_sp) = app_trap_context;
+
+    w_stvec(__alltraps);   
 }

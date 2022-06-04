@@ -11,9 +11,10 @@ struct task_control_block {
     struct task_context task_context;
     char* Kernel_stack;
     uint64 pid;
+    int waiting;  // 0: not waiting; -1: wait; >0: wait for pid. -2: unlock
 };
 
-struct task_control_block new_task_control_block(struct task_context task_cx, char* Kernel_stack);
+struct task_control_block new_task_control_block(struct task_context task_cx, char* Kernel_stack, uint64 current_pid);
 
 struct task_control_block empty_tcb();
 
