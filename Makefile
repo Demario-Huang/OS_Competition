@@ -95,9 +95,9 @@ SRC	+= \
 	$K/src/mm/MemorySet.c \
 	$K/src/load_elf.c \
 	$K/src/task/task_exchange.S \
-	
-	
+	$K/src/fs/fsinfo.c \
 
+	
 # $K/trap/fcntxt.S 
 
 
@@ -195,13 +195,15 @@ ostest: $U/ostest2.c $U/usys.o
 dst=/mnt
 
 # Make fs image
-# fs:
-# 	@if [ ! -f "fs.img" ]; then \
-# 		echo "making fs image..."; \
-# 		dd if=/dev/zero of=fs.img bs=512k count=512; \
-# 		mkfs.vfat -F 32 -s 4 fs.img; fi
-# 	@sudo mount fs.img $(dst)
-# 	@sudo umount $(dst)
+
+# file system is 512k, each block has 512byte
+fs:
+	@if [ ! -f "fs.img" ]; then \
+		echo "making fs image..."; \
+		dd if=/dev/zero of=fs.img bs=512k count=512; \
+		mkfs.vfat -F 32 -s 4 fs.img; fi
+	@sudo mount fs.img $(dst)
+	@sudo umount $(dst)
 
 # @make sdcard dst=$(dst)
 

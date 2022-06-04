@@ -1,3 +1,4 @@
+
 use core::fmt::{self, Write};
 
 const STDIN: usize = 0;
@@ -37,3 +38,4 @@ pub fn getchar() -> u8 {
     read(STDIN, &mut c);
     c[0]
 }
+
