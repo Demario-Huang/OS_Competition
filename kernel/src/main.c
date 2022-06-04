@@ -34,7 +34,6 @@ void main(int num_core) {
     fs_init();
     printf("fs init.. and fs size is %d \n", fs_size);
     printf("fs 0 size is %d \n", Node_array[0].file_size);
-    test();
 
 
     // TASK_MANAGER.number_of_apps = 0; 
