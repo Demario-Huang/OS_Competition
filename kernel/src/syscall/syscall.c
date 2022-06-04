@@ -10,6 +10,7 @@
 #include "mm/MemorySet.h"
 #include "mm/kmalloc.h"
 #include "task_manager.h"
+#include "fs/fsinfo.h"
 
 #define SYSCALL_READ 63
 #define SYSCALL_WRITE 64
@@ -75,8 +76,7 @@ void sys_yield(){
 }
 
 // open a file, return a fd (start file block)
-uint32 sys_fs_open(uint32* filename){
-
+uint32 sys_fs_open(uint8* filename){
 }
 
 // read the file 

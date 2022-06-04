@@ -35,6 +35,8 @@ static Inode Node_array[20];
 // allocate the page to store the infomation, and update above infomation
 void fsinit();
 
+uint32 IfExistFile(uint8 * filename);
+
 uint32 fsgetsize();
 
 uint32  fsget_bitmap_start();

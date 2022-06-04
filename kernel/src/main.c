@@ -32,9 +32,6 @@ void main(int num_core) {
 
 
     fs_init();
-    printf("fs init.. and fs size is %d \n", fs_size);
-    printf("fs 0 size is %d \n", Node_array[0].file_size);
-
 
     // TASK_MANAGER.number_of_apps = 0; 
     // init_all_apps(); // 初始化App，包括初始化其trap上下文，将trap上下文放到用户栈中。

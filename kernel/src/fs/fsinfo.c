@@ -19,5 +19,23 @@ void fs_init(){
   printf("node size is %d \n" , Node_array[0].file_size);
 }
 
+uint32 IfExistFile(uint8 * filename){
+  for (int i = 0; i < 20; i++){
+    uint8 * Inodefilename = Node_array[i].filename;
+    uint8 flag  = 1; 
+    for (int j = 0; j < 32; j++){
+      if( (*filename+j) !=  (*Inodefilename + j)){
+        flag = 0;
+        break;
+      }
+    }
+    if (flag = 1){
+      return 1;
+    }
+  }
+  return 0;
+}
+
+
 void fs_mytest(){
 }
