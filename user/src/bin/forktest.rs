@@ -1,4 +1,3 @@
-
 #![no_std]
 #![no_main]
 
@@ -33,4 +32,3 @@ pub fn main() -> i32 {
     println!("forktest pass.");
     0
 }
-

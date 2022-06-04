@@ -1,4 +1,3 @@
-
 use core::arch::asm;
 
 const SYSCALL_READ: usize = 63;
@@ -64,4 +63,3 @@ pub fn sys_exec(path: &str) -> isize {
 pub fn sys_waitpid(pid: isize, exit_code: *mut i32) -> isize {
     syscall(SYSCALL_WAITPID, [pid as usize, exit_code as usize, 0])
 }
-
