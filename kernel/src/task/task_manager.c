@@ -20,7 +20,6 @@ void add_task_control_block(struct task_control_block TCB){   //Add one TCB to T
 
     TASK_MANAGER.TASK_MANAGER_CONTAINER[pid] = TCB;
     TASK_MANAGER.number_of_apps += 1;
-    printf("[task manager] the pid is %d\n", pid);
 }
 
 void free_task_control_block(int pid){
