@@ -96,6 +96,7 @@ SRC	+= \
 	$K/src/load_elf.c \
 	$K/src/task/task_exchange.S \
 	$K/src/fs/fsinfo.c \
+	$K/src/fs/driver.c \
 
 	
 # $K/trap/fcntxt.S 

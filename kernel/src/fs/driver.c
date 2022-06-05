@@ -4,9 +4,13 @@
 #include "types.h"
 
 // write the info into data block 
-void write_fs(uint32 * data, uint32 block_id, uint32 size );
+void driver_write_fs(uint32 * data, uint32 block_id, uint32 size ){
+  return;
+}
 
 // read from physical fs, return a file stream
-uint32 * read_fs(uint32 block_id, uint32 size);
+uint32 * driver_read_fs(uint32 block_id, uint32 size){
+  return ;
+}
 
 

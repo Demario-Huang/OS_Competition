@@ -10,6 +10,8 @@
 #include "mm/MemorySet.h"
 #include "mm/kmalloc.h"
 #include "task_manager.h"
+#include "fs/fsinfo.h"
+#include "fs/driver.h"
 #include "trap_context.h"
 #include "sbi.h"
 
@@ -102,17 +104,32 @@ uint64 sys_fork(){
 }
 
 // open a file, return a fd (start file block)
-uint32 sys_fs_open(uint32* filename){
-
+uint32 sys_fs_open(uint8* filename){
+  uint32 fd;
+  if (!IfExistFile) {
+    fd = fs_create_Inode(filename);
+    return fd;
+  } else {
+    fd = FindByfilename(filename);
+    return fd;
+  }
 }
 
-// read the file 
+// read the file, could directly read the disk, do not do the protection like identiy the fd is valid
 uint32* sys_fs_read(uint32 fd, uint32 size){
-
+  return driver_read_fs(fd, size);
 }
 
 // write the file into disk 
-void sys_fs_write(uint32 * data, uint32 size){}
+void sys_fs_write(uint32 * data, uint32 fd,uint32 size){
+  driver_write_fs(data, fd, size);
+  update_Inode(fd, size);
+}
+
+void sys_fs_close(uint32 fd){
+  fd = -1;
+  return;
+}
 
 
 void sys_exec(uint64 path){
@@ -181,16 +198,6 @@ sys_read_char(uint64 fd, char* buf, uint64 length){
         panic("Unreachable in sys_read_char!\n");
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 
 // Two auxilary functions for sys_wait()
