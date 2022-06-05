@@ -139,6 +139,17 @@ uint64 tcb_clone(uint64 target_pid){
     struct task_control_block clone_tcb = new_task_control_block(clone_task_context,  kernel_stack_top, 0);
     clone_tcb.memoryset = clone_mem_set;
     clone_tcb.user_token = root_ppn_to_token(clone_mem_set.page_table.root_ppn);
+
+    uint64 user_high_sp = clone_tcb.memoryset.UserStackHigh.start_addr;
+        
+    uint64 phy_user_high_sp = translate(clone_tcb.memoryset.page_table.root_ppn, user_high_sp);
+
+    struct trap_context current_trap_cx = *((struct trap_context *)phy_user_high_sp);
+
+    current_trap_cx.general_register[10] = 0;
+
+    *((struct trap_context *)phy_user_high_sp) = current_trap_cx;
+
     add_task_control_block(clone_tcb);
 
     return clone_tcb.pid;

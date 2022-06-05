@@ -13,6 +13,7 @@
 #include "fs/fsinfo.h"
 #include "fs/driver.h"
 #include "trap_context.h"
+#include "sbi.h"
 
 #define SYSCALL_READ 63
 #define SYSCALL_WRITE 64
@@ -24,6 +25,8 @@
 #define SYSCALL_EXEC 221
 #define SYSCALL_WAITPID 260
 
+
+int first_exe = 1;
 
 extern struct task_manager TASK_MANAGER;
 
@@ -45,13 +48,18 @@ uint64 syscall(uint64 type, uint64 args[3]){
         return sys_fork();
     }
     else if (type == SYSCALL_WAITPID){
-
         sys_wait();
-
     }
     else if (type == SYSCALL_EXEC){
         uint64 path = translate(root_ppn_to_token(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn), args[0]);
         sys_exec(path);
+    }
+    else if (type == SYSCALL_READ){
+        args[1] = translate(root_ppn_to_token(TASK_MANAGER.processing_tcb.memoryset.page_table.root_ppn), args[1]);
+        sys_read_char(args[0], args[1], args[2]);
+    }
+    else if (type == SYSCALL_GETPID){
+        return TASK_MANAGER.processing_tcb.pid;
     }
     else{
         panic("[kernel] Not supported system call: %d\n", type);
@@ -60,7 +68,6 @@ uint64 syscall(uint64 type, uint64 args[3]){
 }
 
 void sys_exit(uint64 exit_code){
-    printf("[kernel] The application end with exit code: %d\n", exit_code);
     free_task_control_block(TASK_MANAGER.processing_tcb.pid);
     sys_unlock_wait(TASK_MANAGER.processing_tcb.pid);
 
@@ -70,7 +77,6 @@ void sys_exit(uint64 exit_code){
     }else{
         panic("finish running all the apps!\n");
     }
-
 }
 
 uint64 sys_write(uint64 fd, char* buf, uint64 length) {
@@ -127,6 +133,30 @@ void sys_fs_close(uint32 fd){
 
 
 void sys_exec(uint64 path){
+
+    if (first_exe == 1){
+        printf("[###################################################################]\n");
+        printf("                        /Welcome to AQOS shell/                      \n");
+        printf("\n");
+        printf("                    /The current support apps are/                   \n");
+        // printf("                [1] exit                       \n");
+        // printf("                [2] fantastic_text             \n");
+        // printf("                [3] forkexec                   \n");
+        // printf("                [4] forktest                   \n");
+        // printf("                [5] forktest2                  \n");
+        // printf("                [6] forktest_simple            \n");
+        // printf("                [7] forktree                   \n");
+        printf("                             [8] hello_world                         \n");
+        // printf("                [9] matrix                     \n");
+        // printf("                [10] sleep                     \n");
+        // printf("                [11] sleep_simple              \n");
+        // printf("                [12] stack_overflow            \n");
+        // printf("                [13] usertests                 \n");
+        printf("                             [14] yield                              \n");
+        printf("/Please enter the app number to run (e.g. type 8 for hello_world)/   \n");
+        printf("\n");
+        first_exe = 0;
+    }
     
     exec_new_app(path);
 
@@ -147,14 +177,27 @@ void sys_wait(){
     }
     else{
         TASK_MANAGER.TASK_MANAGER_CONTAINER[TASK_MANAGER.processing_tcb.pid].waiting = -1;   // set its status to be waiting!
-        printf("[kernel] pid %d begin waiting!\n", TASK_MANAGER.processing_tcb.pid);
         pc_back_one_inst();
         run_next_app(0);
     }
 }
 
 
+sys_read_char(uint64 fd, char* buf, uint64 length){
+    if (fd == 0){    // means stdin
 
+        if (length != 1){
+            panic("only support read 1 char a time");
+        }
+
+        char c = sbi_console_getchar();
+
+        buf[0] = c; 
+
+    } else{
+        panic("Unreachable in sys_read_char!\n");
+    }
+}
 
 
 // Two auxilary functions for sys_wait()
@@ -164,7 +207,6 @@ void sys_unlock_wait(uint64 self_pid){
     for (int pid_i = 0; pid_i < MAX_NUM_OF_APPS; pid_i ++){
         if (TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting == -1){
             TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting = -2;
-            printf("[kernel] pid %d unlock pid %d\n", self_pid, pid_i);
         }
         if (TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting == self_pid){
             TASK_MANAGER.TASK_MANAGER_CONTAINER[pid_i].waiting = -2;

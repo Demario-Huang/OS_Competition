@@ -53,7 +53,8 @@ void trap_handler(){
     uint64 trap_from_kernel = 0;
     if (sstatus != 0x0){    // status == 0x100: from kernel mode
         panic("hello!~~~\n");
-        trap_from_kernel = 1;
+        // trap_from_kernel = 1;
+        // trap_from_kernel = 0;
     }else{
         trap_from_kernel = 0;
         w_stvec(trap_handler);  
